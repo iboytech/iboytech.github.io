@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#222">
+  <meta name="google-site-verification" content="kJUjgbvECplcwB4X3hhAHUuG5Bfr2JLsTpEMZ6fRR-o">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: true,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="NoSQL概述1、什么是 NoSQLNoSQL泛指非关系型的数据库Not Only SQL。2、NoSQL 数据库的四大分类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="暑期培训-Redis">
+<meta property="og:url" content="https://blog.iboy.tech/post/30045.html">
+<meta property="og:site_name" content="一名不学无术的伪程序猿">
+<meta property="og:description" content="NoSQL概述1、什么是 NoSQLNoSQL泛指非关系型的数据库Not Only SQL。2、NoSQL 数据库的四大分类">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.iboy.tech/static/img/%E6%9A%91%E6%9C%9F%E5%9F%B9%E8%AE%AD-Redis/image-20200726194039683.png">
+<meta property="article:published_time" content="2022-05-20T09:05:57.928Z">
+<meta property="article:modified_time" content="2022-05-20T09:05:57.929Z">
+<meta property="article:author" content="iBoy">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.iboy.tech/static/img/%E6%9A%91%E6%9C%9F%E5%9F%B9%E8%AE%AD-Redis/image-20200726194039683.png">
+  <link rel="canonical" href="https://blog.iboy.tech/post/30045">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>暑期培训-Redis | 一名不学无术的伪程序猿</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一名不学无术的伪程序猿</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>日程表</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/iboy-tech" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.iboy.tech/post/30045.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://ae01.alicdn.com/kf/HTB1pZi7XlCw3KVjSZFu763AOpXa0.png">
+      <meta itemprop="name" content="iBoy">
+      <meta itemprop="description" content="知道的越多，不知道的越多...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一名不学无术的伪程序猿">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          暑期培训-Redis
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-20 17:05:57" itemprop="dateCreated datePublished" datetime="2022-05-20T17:05:57+08:00">2022-05-20</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="NoSQL概述"><a href="#NoSQL概述" class="headerlink" title="NoSQL概述"></a>NoSQL概述</h1><h2 id="1、什么是-NoSQL"><a href="#1、什么是-NoSQL" class="headerlink" title="1、什么是 NoSQL"></a>1、什么是 NoSQL</h2><p>NoSQL泛指非关系型的数据库Not Only SQL。</p><h2 id="2、NoSQL-数据库的四大分类"><a href="#2、NoSQL-数据库的四大分类" class="headerlink" title="2、NoSQL 数据库的四大分类"></a>2、NoSQL 数据库的四大分类</h2><a id="more"></a>
+<ul>
+<li>键值（key-value）存储</li>
+<li>列存储</li>
+<li>文档数据库</li>
+<li>图形数据库</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>分类</strong></th>
+<th><strong>相关产品</strong></th>
+<th><strong>典型应用</strong></th>
+<th><strong>数据模型</strong></th>
+<th><strong>优点</strong></th>
+<th><strong>缺点</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>键值（key-value)</td>
+<td>Tokyo、  Cabinet/Tyrant、<strong>Redis</strong>、Voldemort、Berkeley DB、Memcached</td>
+<td>内容缓存，主要用于处理大量数据的高访问负载</td>
+<td>一系列键值对</td>
+<td>快速查询</td>
+<td>存储的数据缺少结构化</td>
+</tr>
+<tr>
+<td>列存储数据库</td>
+<td>Cassandra, HBase, Riak</td>
+<td>分布式的文件系统</td>
+<td>以列簇式存储，将同一列数据存在一起</td>
+<td>查找速度快，可扩展性强，更容易进行分布式扩展</td>
+<td>功能相对局限</td>
+</tr>
+<tr>
+<td>文档数据库</td>
+<td>CouchDB, <strong>MongoDB</strong></td>
+<td>Web应用（与Key-Value类似，value是结构化的）</td>
+<td>一系列键值对</td>
+<td>数据结构要求不严格</td>
+<td>查询性能不高，而且缺乏统一的查询语法</td>
+</tr>
+<tr>
+<td>图形（Graph）数据库</td>
+<td>Neo4J, InfoGrid, Infinite Graph</td>
+<td>社交网络，推荐系统等。专注于构建关系图谱</td>
+<td>图结构</td>
+<td>利用图结构相关算法</td>
+<td>需要对整个图做计算才能得出结果，不容易做分布式集群方案</td>
+</tr>
+</tbody></table>
+<p>MongoDB主要用来解决海量数据的访问效率问题，他是最像关系型数据库的非关系型数据库。</p>
+<p>MongoDB 的主要适用场景为：数据不是特别重要（例如通知，推送这些），数据表结构变化较为频繁，数据量特别大，数据的并发性特别高，数据结构比较特别（例如地图的位置坐标），这些情况下用 MongoDB</p>
+<p>Memcached主要是用来提高访问关系型数据库的效率问题，只局限于访问。</p>
+<p>redis在我看来算是Memcached的升级版，加入了提高数据库写入的功能。</p>
+<h2 id="3、NoSQL-的特点"><a href="#3、NoSQL-的特点" class="headerlink" title="3、NoSQL 的特点"></a>3、NoSQL 的特点</h2><ul>
+<li><p>易扩展</p>
+</li>
+<li><p>灵活的数据模型</p>
+</li>
+<li><p>大数据量，高性能</p>
+</li>
+<li><p>高可用</p>
+</li>
+</ul>
+<h2 id="4、为什么需要-NoSQL"><a href="#4、为什么需要-NoSQL" class="headerlink" title="4、为什么需要 NoSQL"></a>4、为什么需要 NoSQL</h2><p>随着web2.0互联网的诞生！传统的关系型数据库很难对付web2.0时代！尤其<br>是超大规模的高并发的社区！ 暴露出来很多难以克服的问题，NoSQL在当今大数据环境下发展的十分迅<br>速，Redis是发展最快的，而且是我们当下必须要掌握的一个技术！<br>很多的数据类型用户的个人信息，社交网络，地理位置。这些数据类型的存储不需要一个固定的格式！<br>不需要多月的操作就可以横向扩展的 ！ Map&lt;String,Object&gt; 使用键值对来控制！</p>
+<h1 id="Redis简介"><a href="#Redis简介" class="headerlink" title="Redis简介"></a>Redis简介</h1><p><img src="../static/img/%E6%9A%91%E6%9C%9F%E5%9F%B9%E8%AE%AD-Redis/image-20200726194039683.png" alt="image-20200726194039683"></p>
+<ul>
+<li><p>Redis（Remote Dictionary Server )，即远程字典服务</p>
+</li>
+<li><p>使用C语言编写的开源NoSQL数据库</p>
+</li>
+<li><p>高性能Key-Value内存数据库</p>
+</li>
+<li><p>支持将内存数据持久化到磁盘和即master-slave模式的数据备份（RDB和AOF）</p>
+</li>
+</ul>
+<h1 id="5大基本数据类型"><a href="#5大基本数据类型" class="headerlink" title="5大基本数据类型"></a>5大基本数据类型</h1><ul>
+<li><p>string（字符串）最基本的数据类型一个redis中字符串value最多可以是512M nx      set if    not exists</p>
+</li>
+<li><p>hash（Hash表）</p>
+</li>
+<li><p>list（列表）</p>
+</li>
+<li><p>set（无序集合）</p>
+</li>
+<li><p>zset(sorted set) （有序集合）</p>
+<p>下面来对这5种数据结构类型作简单的介绍：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>结构类型</th>
+<th align="left">结构存储的值</th>
+<th>结构的读写能力</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>String</td>
+<td align="left">可以是字符串、整数或者浮点数</td>
+<td>对整个字符串或者字符串的其中一部分执行操作；对象和浮点数执行自增(increment)或者自减(decrement)</td>
+</tr>
+<tr>
+<td>List</td>
+<td align="left">一个链表，链表上的每个节点都包含了一个字符串</td>
+<td>从链表的两端推入或者弹出元素；根据偏移量对链表进行修剪(trim)；读取单个或者多个元素；根据值来查找或者移除元素</td>
+</tr>
+<tr>
+<td>Set</td>
+<td align="left">包含字符串的无序收集器(unorderedcollection)，并且被包含的每个字符串都是独一无二的、各不相同</td>
+<td>添加、获取、移除单个元素；检查一个元素是否存在于某个集合中；计算交集、并集、差集；从集合里卖弄随机获取元素</td>
+</tr>
+<tr>
+<td>Hash</td>
+<td align="left">包含键值对的无序散列表</td>
+<td>添加、获取、移除单个键值对；获取所有键值对</td>
+</tr>
+<tr>
+<td>Zset</td>
+<td align="left">字符串成员(member)与浮点数分值(score)之间的有序映射，元素的排列顺序由分值的大小决定</td>
+<td>添加、获取、删除单个元素；根据分值范围(range)或者成员来获取元素</td>
+</tr>
+</tbody></table>
+<h1 id="3种特殊数据类型"><a href="#3种特殊数据类型" class="headerlink" title="3种特殊数据类型"></a>3种特殊数据类型</h1><ul>
+<li><p>Geospatial 地理位置</p>
+<p>推算地理位置的信息，两地之间的距离，方圆几里的人</p>
+</li>
+<li><p>Hyperloglog</p>
+<p>使用基数估计统计网站访客数</p>
+</li>
+<li><p>Bitmap</p>
+<p>统计用户信息，活跃，不活跃！ 登录 、 未登录！签到打卡 两个状态的，都可以使用</p>
+</li>
+</ul>
+<h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><ul>
+<li><p>set / get / del /getset</p>
+</li>
+<li><p>expire</p>
+<p>​       Redis对于过期键有三种清除策略：</p>
+<ul>
+<li><p>被动删除：当读/写一个已经过期的key时，会触发惰性删除策略，直接删除掉这个过期key</p>
+</li>
+<li><p>主动删除：由于惰性删除策略无法保证冷数据被及时删掉，所以Redis会定期主动淘汰一批已过期的key</p>
+</li>
+<li><p>当前已用内存超过maxmemory限定时，触发主动清理策略</p>
+<p>maxmemory 当前已用内存超过maxmemory限定时，触发主动清理策略</p>
+<ul>
+<li>volatile-lru：只对设置了过期时间的key进行LRU（默认值）</li>
+<li>allkeys-lru ： 删除lru算法的key</li>
+<li>volatile-random：随机删除即将过期key</li>
+<li>allkeys-random：随机删除</li>
+<li>volatile-ttl ： 删除即将过期的</li>
+<li>noeviction ： 永不过期，返回错误</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>exists</p>
+</li>
+<li><p>incr</p>
+</li>
+<li><p>setrange</p>
+</li>
+</ul>
+<h1 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h1><ul>
+<li>缓存</li>
+<li>限时业务的运用</li>
+<li>计数器相关问题(网站访问统计)    </li>
+<li>排行榜相关问题        </li>
+<li>任务队列</li>
+<li>分布式集群架构中的 session 分离</li>
+</ul>
+<h1 id="SpringBoot整合"><a href="#SpringBoot整合" class="headerlink" title="SpringBoot整合"></a>SpringBoot整合</h1><h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;commons-pool2&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">## Redis 配置</span><br><span class="line">## Redis数据库索引（默认为0）</span><br><span class="line">spring.redis.database=<span class="number">0</span></span><br><span class="line"></span><br><span class="line">## Redis服务器地址</span><br><span class="line">spring.redis.host=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line"></span><br><span class="line">## Redis服务器连接端口</span><br><span class="line">spring.redis.port=<span class="number">6379</span></span><br><span class="line"></span><br><span class="line">## Redis服务器连接密码（默认为空）</span><br><span class="line">spring.redis.password=</span><br><span class="line"></span><br><span class="line">## 连接超时时间（毫秒）</span><br><span class="line">spring.redis.timeout=<span class="number">5000</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="数据持久化"><a href="#数据持久化" class="headerlink" title="数据持久化"></a>数据持久化</h2><p>下面给出一些常用的时间格式</p>
+<blockquote>
+<p>“”0 30 1 ? * * “每天凌晨1:30执行</p>
+<p>“0 0 12 * * ?” 每天中午十二点触发</p>
+<p>“0 15 10 ? * *” 每天早上10：15触发</p>
+<p>“0 15 10 * * ?” 每天早上10：15触发</p>
+<p>“0 15 10 * * ? *” 每天早上10：15触发</p>
+<p>“0 15 10 * * ? 2005” 2005年的每天早上10：15触发</p>
+<p>“0 * 14 * * ?” 每天从下午2点开始到2点59分每分钟一次触发</p>
+<p>“0 0/5 14 * * ?” 每天从下午2点开始到2：55分结束每5分钟一次触发</p>
+<p>“0 0/5 14,18 * * ?” 每天的下午2点至2：55和6点至6点55分两个时间段内每5分钟一次触发</p>
+<p>“0 0-5 14 * * ?” 每天14:00至14:05每分钟一次触发</p>
+<p>“0 10,44 14 ? 3 WED” 三月的每周三的14：10和14：44触发</p>
+<p>“0 15 10 ? * MON-FRI” 每个周一、周二、周三、周四、周五的10：15触发</p>
+</blockquote>
+<h2 id="Session共享配置"><a href="#Session共享配置" class="headerlink" title="Session共享配置"></a>Session共享配置</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--session-redis--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">&lt;groupId&gt;org.springframework.session&lt;/groupId&gt;</span><br><span class="line">&lt;artifactId&gt;spring-session-data-redis&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Session存储设置"><a href="#Session存储设置" class="headerlink" title="Session存储设置"></a>Session存储设置</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">配置</span><br><span class="line">spring.session.store-type=redis</span><br></pre></td></tr></table></figure>
+
+<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><h2 id="Redis操作复杂数据类型"><a href="#Redis操作复杂数据类型" class="headerlink" title="Redis操作复杂数据类型"></a>Redis操作复杂数据类型</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ctgu.demo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.DisplayName;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.test.context.SpringBootTest;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DemoApplicationTests</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    RedisTemplate redisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">contextLoads</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="meta">@DisplayName</span>(<span class="string">"RediscaozSet"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">testSet</span><span class="params">()</span></span>&#123;</span><br><span class="line">        SetOperations operations=redisTemplate.opsForSet();</span><br><span class="line">        operations.add(<span class="string">"s1"</span>, <span class="string">"v1"</span>);</span><br><span class="line">        operations.add(<span class="string">"s1"</span>,<span class="string">"v2"</span>);</span><br><span class="line">        Cursor&lt;String&gt;cursor=operations.scan(<span class="string">"s1"</span>, ScanOptions.NONE);</span><br><span class="line">        <span class="keyword">while</span> (cursor.hasNext())&#123;</span><br><span class="line">            System.out.println(cursor.next());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="meta">@DisplayName</span>(<span class="string">"测试Hash"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">testHash</span><span class="params">()</span></span>&#123;</span><br><span class="line">        HashOperations&lt;String,String,String&gt; operations=redisTemplate.opsForHash();</span><br><span class="line">        HashMap map=<span class="keyword">new</span> HashMap();</span><br><span class="line">        map.put(<span class="string">"t1"</span>,<span class="string">"tv1"</span>);</span><br><span class="line">        operations.putAll(<span class="string">"h1"</span>,map);</span><br><span class="line">        operations.put(<span class="string">"h1"</span>,<span class="string">"k1"</span>,<span class="string">"v1"</span>);</span><br><span class="line">        operations.put(<span class="string">"h1"</span>,<span class="string">"k2"</span>,<span class="string">"v2"</span>);</span><br><span class="line">        operations.put(<span class="string">"h1"</span>,<span class="string">"k3"</span>,<span class="string">"m2"</span>);</span><br><span class="line">        Cursor&lt;Map.Entry&lt;String, String&gt;&gt; cursor=operations.scan(<span class="string">"h1"</span>, <span class="keyword">new</span> ScanOptions.ScanOptionsBuilder().match(<span class="string">"*k*"</span>).build());</span><br><span class="line">        <span class="keyword">while</span> (cursor.hasNext())&#123;</span><br><span class="line">            Map.Entry&lt;String,String&gt; entry = cursor.next();</span><br><span class="line">            System.out.println(entry.getKey());;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">//        System.out.println(redisTemplate.opsForHash().entries("h1"));</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="项目代码："><a href="#项目代码：" class="headerlink" title="项目代码："></a>项目代码：</h1><blockquote>
+<p>GitHub：<a href="https://github.com/iboy-tech/2020-7-29-redis" target="_blank" rel="noopener">https://github.com/iboy-tech/2020-7-29-redis</a></p>
+</blockquote>
+<h1 id="关于Redis的参考"><a href="#关于Redis的参考" class="headerlink" title="关于Redis的参考"></a>关于Redis的参考</h1><blockquote>
+<p>👉 Redis命令手册   <a href="https://www.redis.net.cn/order/" target="_blank" rel="noopener">https://www.redis.net.cn/order/</a></p>
+<p>👉 Redis练习平台  <a href="https://try.redis.io/" target="_blank" rel="noopener">https://try.redis.io/</a></p>
+<p>👉 菜鸟教程    <a href="https://www.runoob.com/redis/redis-keys.html" target="_blank" rel="noopener">https://www.runoob.com/redis/redis-keys.html</a>     </p>
+<p> 👉 SpringBoot整合Redis    <a href="https://segmentfault.com/a/1190000017057950" target="_blank" rel="noopener">https://segmentfault.com/a/1190000017057950</a>    </p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="https://ae01.alicdn.com/kf/HTB1AlvVXk9E3KVjSZFr7610UVXaw.png" alt="iBoy wechat" style="width: 150px; max-width: 100%;">
+  <div>欢迎您扫一扫上面的微信公众号，订阅我的博客！</div>
+</div>
+
+      
+        <div class="reward-container">
+  <div></div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="https://ae01.alicdn.com/kf/HTB1eKnGXkWE3KVjSZSy760ocXXah.png" alt="iBoy 支持作者">
+        <p>支持作者</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>iBoy
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.iboy.tech/post/30045.html" title="暑期培训-Redis">https://blog.iboy.tech/post/30045.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/post/61036.html" rel="next" title="Docker搭建Hadoop集群">
+                  <i class="fa fa-chevron-left"></i> Docker搭建Hadoop集群
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/post/49742.html" rel="prev" title="Mac安装和破解激活Charles">
+                  Mac安装和破解激活Charles <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments" id="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80NDI4OS8yMDgyMQ=="></div>
+  </div>
+  
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NoSQL概述"><span class="nav-number">1.</span> <span class="nav-text">NoSQL概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、什么是-NoSQL"><span class="nav-number">1.1.</span> <span class="nav-text">1、什么是 NoSQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、NoSQL-数据库的四大分类"><span class="nav-number">1.2.</span> <span class="nav-text">2、NoSQL 数据库的四大分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、NoSQL-的特点"><span class="nav-number">1.3.</span> <span class="nav-text">3、NoSQL 的特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、为什么需要-NoSQL"><span class="nav-number">1.4.</span> <span class="nav-text">4、为什么需要 NoSQL</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis简介"><span class="nav-number">2.</span> <span class="nav-text">Redis简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5大基本数据类型"><span class="nav-number">3.</span> <span class="nav-text">5大基本数据类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3种特殊数据类型"><span class="nav-number">4.</span> <span class="nav-text">3种特殊数据类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常用命令"><span class="nav-number">5.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用场景"><span class="nav-number">6.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot整合"><span class="nav-number">7.</span> <span class="nav-text">SpringBoot整合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖"><span class="nav-number">7.1.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">7.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据持久化"><span class="nav-number">7.3.</span> <span class="nav-text">数据持久化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Session共享配置"><span class="nav-number">7.4.</span> <span class="nav-text">Session共享配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Session存储设置"><span class="nav-number">7.5.</span> <span class="nav-text">Session存储设置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#附录"><span class="nav-number">8.</span> <span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis操作复杂数据类型"><span class="nav-number">8.1.</span> <span class="nav-text">Redis操作复杂数据类型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目代码："><span class="nav-number">9.</span> <span class="nav-text">项目代码：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于Redis的参考"><span class="nav-number">10.</span> <span class="nav-text">关于Redis的参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="iBoy"
+    src="https://ae01.alicdn.com/kf/HTB1pZi7XlCw3KVjSZFu763AOpXa0.png">
+  <p class="site-author-name" itemprop="name">iBoy</p>
+  <div class="site-description" itemprop="description">知道的越多，不知道的越多...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+      
+<!--音乐播放器-->
+
+           <div >
+              <iframe frameborder="no" style="margin-top:25px;" border="0" marginwidth="0" marginheight="0" width="210" height="110" src="//music.163.com/outchain/player?type=2&id=479850552&auto=0&height=66"></iframe>
+           </div>
+
+
+
+<!--标签云-->
+
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Celery/" rel="tag">Celery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding/" rel="tag">Coding</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask/" rel="tag">Flask</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-SoketIO/" rel="tag">Flask SoketIO</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-Redis/" rel="tag">Flask-Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-SQLAlchemy/" rel="tag">Flask-SQLAlchemy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Frp/" rel="tag">Frp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/" rel="tag">Git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/" rel="tag">GitHub</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDE/" rel="tag">IDE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Markdown/" rel="tag">Markdown</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Miniconda/" rel="tag">Miniconda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python-Web/" rel="tag">Python Web</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Trojan/" rel="tag">Trojan</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/" rel="tag">Unity</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VsCode/" rel="tag">VsCode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web/" rel="tag">Web</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebSocket/" rel="tag">WebSocket</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/" rel="tag">npm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipenv/" rel="tag">pipenv</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E5%B0%9A/" rel="tag">云尚</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%8F%E7%A8%8B/" rel="tag">协程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%A8%E7%BA%BF%E5%B7%A5%E5%85%B7/" rel="tag">在线工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8A%93%E5%8C%85/" rel="tag">抓包</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8E%A5%E7%A0%81%E5%B9%B3%E5%8F%B0/" rel="tag">接码平台</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%B6%E8%97%8F/" rel="tag">收藏</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86/" rel="tag">数据库原理</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9A%91%E6%9C%9F%E7%AD%94%E8%BE%A9/" rel="tag">暑期答辩</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" rel="tag">科学上网</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">iBoy</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">440k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:40</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.1.js"></script>
+
+<script src="/js/motion.js?v=7.4.1.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.1.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.1.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.1.js"></script>
+
+
+  <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three.min.js"></script>
+    <script defer src="/lib/three/three-waves.min.js"></script>
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+<script src="/js/local-search.js?v=7.4.1.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+</body>
+</html>

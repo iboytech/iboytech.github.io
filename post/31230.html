@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#222">
+  <meta name="google-site-verification" content="kJUjgbvECplcwB4X3hhAHUuG5Bfr2JLsTpEMZ6fRR-o">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: true,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker利用Tomcat部署war包">
+<meta property="og:url" content="https://blog.iboy.tech/post/31230.html">
+<meta property="og:site_name" content="一名不学无术的伪程序猿">
+<meta property="og:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-02T15:20:51.000Z">
+<meta property="article:modified_time" content="2022-05-20T09:05:57.921Z">
+<meta property="article:author" content="iBoy">
+<meta name="twitter:card" content="summary">
+  <link rel="canonical" href="https://blog.iboy.tech/post/31230">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Docker利用Tomcat部署war包 | 一名不学无术的伪程序猿</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一名不学无术的伪程序猿</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>日程表</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/iboy-tech" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.iboy.tech/post/31230.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://ae01.alicdn.com/kf/HTB1pZi7XlCw3KVjSZFu763AOpXa0.png">
+      <meta itemprop="name" content="iBoy">
+      <meta itemprop="description" content="知道的越多，不知道的越多...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一名不学无术的伪程序猿">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          Docker利用Tomcat部署war包
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-02 23:20:51" itemprop="dateCreated datePublished" datetime="2020-12-02T23:20:51+08:00">2020-12-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-20 17:05:57" itemprop="dateModified" datetime="2022-05-20T17:05:57+08:00">2022-05-20</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">  Licensed to the Apache Software Foundation (ASF) under one or more</span></span><br><span class="line"><span class="comment">  contributor license agreements.  See the NOTICE file distributed with</span></span><br><span class="line"><span class="comment">  this work for additional information regarding copyright ownership.</span></span><br><span class="line"><span class="comment">  The ASF licenses this file to You under the Apache License, Version 2.0</span></span><br><span class="line"><span class="comment">  (the "License"); you may not use this file except in compliance with</span></span><br><span class="line"><span class="comment">  the License.  You may obtain a copy of the License at</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      http://www.apache.org/licenses/LICENSE-2.0</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  Unless required by applicable law or agreed to in writing, software</span></span><br><span class="line"><span class="comment">  distributed under the License is distributed on an "AS IS" BASIS,</span></span><br><span class="line"><span class="comment">  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></span><br><span class="line"><span class="comment">  See the License for the specific language governing permissions and</span></span><br><span class="line"><span class="comment">  limitations under the License.</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- <span class="doctag">Note:</span>  A "Server" is not itself a "Container", so you may not</span></span><br><span class="line"><span class="comment">     define subcomponents such as "Valves" at this level.</span></span><br><span class="line"><span class="comment">     Documentation at /docs/config/server.html</span></span><br><span class="line"><span class="comment"> --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Server</span> <span class="attr">port</span>=<span class="string">"8005"</span> <span class="attr">shutdown</span>=<span class="string">"SHUTDOWN"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Listener</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.startup.VersionLoggerListener"</span> /&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- Security listener. Documentation at /docs/config/listeners.html</span></span><br><span class="line"><span class="comment">  &lt;Listener className="org.apache.catalina.security.SecurityListener" /&gt;</span></span><br><span class="line"><span class="comment">  --&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--APR library loader. Documentation at /docs/apr.html --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Listener</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.core.AprLifecycleListener"</span> <span class="attr">SSLEngine</span>=<span class="string">"on"</span> /&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- Prevent memory leaks due to use of particular java/javax APIs--&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Listener</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.core.JreMemoryLeakPreventionListener"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Listener</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.mbeans.GlobalResourcesLifecycleListener"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Listener</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.core.ThreadLocalLeakPreventionListener"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- Global JNDI resources</span></span><br><span class="line"><span class="comment">       Documentation at /docs/jndi-resources-howto.html</span></span><br><span class="line"><span class="comment">  --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">GlobalNamingResources</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Editable user database that can also be used by</span></span><br><span class="line"><span class="comment">         UserDatabaseRealm to authenticate users</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Resource</span> <span class="attr">name</span>=<span class="string">"UserDatabase"</span> <span class="attr">auth</span>=<span class="string">"Container"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">type</span>=<span class="string">"org.apache.catalina.UserDatabase"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">description</span>=<span class="string">"User database that can be updated and saved"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">factory</span>=<span class="string">"org.apache.catalina.users.MemoryUserDatabaseFactory"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">pathname</span>=<span class="string">"conf/tomcat-users.xml"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">GlobalNamingResources</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- A "Service" is a collection of one or more "Connectors" that share</span></span><br><span class="line"><span class="comment">       a single "Container" <span class="doctag">Note:</span>  A "Service" is not itself a "Container",</span></span><br><span class="line"><span class="comment">       so you may not define subcomponents such as "Valves" at this level.</span></span><br><span class="line"><span class="comment">       Documentation at /docs/config/service.html</span></span><br><span class="line"><span class="comment">   --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Service</span> <span class="attr">name</span>=<span class="string">"Catalina"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--The connectors can use a shared executor, you can define one or more named thread pools--&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">    &lt;Executor name="tomcatThreadPool" namePrefix="catalina-exec-"</span></span><br><span class="line"><span class="comment">        maxThreads="150" minSpareThreads="4"/&gt;</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- A "Connector" represents an endpoint by which requests are received</span></span><br><span class="line"><span class="comment">         and responses are returned. Documentation at :</span></span><br><span class="line"><span class="comment">         Java HTTP Connector: /docs/config/http.html</span></span><br><span class="line"><span class="comment">         Java AJP  Connector: /docs/config/ajp.html</span></span><br><span class="line"><span class="comment">         APR (HTTP/AJP) Connector: /docs/apr.html</span></span><br><span class="line"><span class="comment">         Define a non-SSL/TLS HTTP/1.1 Connector on port 8080</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">"8080"</span> <span class="attr">protocol</span>=<span class="string">"HTTP/1.1"</span></span></span><br><span class="line"><span class="tag">               <span class="attr">connectionTimeout</span>=<span class="string">"20000"</span></span></span><br><span class="line"><span class="tag">               <span class="attr">redirectPort</span>=<span class="string">"8443"</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- A "Connector" using the shared thread pool--&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">    &lt;Connector executor="tomcatThreadPool"</span></span><br><span class="line"><span class="comment">               port="8080" protocol="HTTP/1.1"</span></span><br><span class="line"><span class="comment">               connectionTimeout="20000"</span></span><br><span class="line"><span class="comment">               redirectPort="8443" /&gt;</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Define an SSL/TLS HTTP/1.1 Connector on port 8443</span></span><br><span class="line"><span class="comment">         This connector uses the NIO implementation. The default</span></span><br><span class="line"><span class="comment">         SSLImplementation will depend on the presence of the APR/native</span></span><br><span class="line"><span class="comment">         library and the useOpenSSL attribute of the</span></span><br><span class="line"><span class="comment">         AprLifecycleListener.</span></span><br><span class="line"><span class="comment">         Either JSSE or OpenSSL style configuration may be used regardless of</span></span><br><span class="line"><span class="comment">         the SSLImplementation selected. JSSE style configuration is used below.</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">    &lt;Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"</span></span><br><span class="line"><span class="comment">               maxThreads="150" SSLEnabled="true"&gt;</span></span><br><span class="line"><span class="comment">        &lt;SSLHostConfig&gt;</span></span><br><span class="line"><span class="comment">            &lt;Certificate certificateKeystoreFile="conf/localhost-rsa.jks"</span></span><br><span class="line"><span class="comment">                         type="RSA" /&gt;</span></span><br><span class="line"><span class="comment">        &lt;/SSLHostConfig&gt;</span></span><br><span class="line"><span class="comment">    &lt;/Connector&gt;</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Define an SSL/TLS HTTP/1.1 Connector on port 8443 with HTTP/2</span></span><br><span class="line"><span class="comment">         This connector uses the APR/native implementation which always uses</span></span><br><span class="line"><span class="comment">         OpenSSL for TLS.</span></span><br><span class="line"><span class="comment">         Either JSSE or OpenSSL style configuration may be used. OpenSSL style</span></span><br><span class="line"><span class="comment">         configuration is used below.</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">    &lt;Connector port="8443" protocol="org.apache.coyote.http11.Http11AprProtocol"</span></span><br><span class="line"><span class="comment">               maxThreads="150" SSLEnabled="true" &gt;</span></span><br><span class="line"><span class="comment">        &lt;UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" /&gt;</span></span><br><span class="line"><span class="comment">        &lt;SSLHostConfig&gt;</span></span><br><span class="line"><span class="comment">            &lt;Certificate certificateKeyFile="conf/localhost-rsa-key.pem"</span></span><br><span class="line"><span class="comment">                         certificateFile="conf/localhost-rsa-cert.pem"</span></span><br><span class="line"><span class="comment">                         certificateChainFile="conf/localhost-rsa-chain.pem"</span></span><br><span class="line"><span class="comment">                         type="RSA" /&gt;</span></span><br><span class="line"><span class="comment">        &lt;/SSLHostConfig&gt;</span></span><br><span class="line"><span class="comment">    &lt;/Connector&gt;</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Define an AJP 1.3 Connector on port 8009 --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">    &lt;Connector protocol="AJP/1.3"</span></span><br><span class="line"><span class="comment">               address="::1"</span></span><br><span class="line"><span class="comment">               port="8009"</span></span><br><span class="line"><span class="comment">               redirectPort="8443" /&gt;</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- An Engine represents the entry point (within Catalina) that processes</span></span><br><span class="line"><span class="comment">         every request.  The Engine implementation for Tomcat stand alone</span></span><br><span class="line"><span class="comment">         analyzes the HTTP headers included with the request, and passes them</span></span><br><span class="line"><span class="comment">         on to the appropriate Host (virtual host).</span></span><br><span class="line"><span class="comment">         Documentation at /docs/config/engine.html --&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- You should set jvmRoute to support load-balancing via AJP ie :</span></span><br><span class="line"><span class="comment">    &lt;Engine name="Catalina" defaultHost="localhost" jvmRoute="jvm1"&gt;</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Engine</span> <span class="attr">name</span>=<span class="string">"Catalina"</span> <span class="attr">defaultHost</span>=<span class="string">"localhost"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">&lt;!--For clustering, please take a look at documentation at:</span></span><br><span class="line"><span class="comment">          /docs/cluster-howto.html  (simple how to)</span></span><br><span class="line"><span class="comment">          /docs/config/cluster.html (reference documentation) --&gt;</span></span><br><span class="line">      <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">      &lt;Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/&gt;</span></span><br><span class="line"><span class="comment">      --&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">&lt;!-- Use the LockOutRealm to prevent attempts to guess user passwords</span></span><br><span class="line"><span class="comment">           via a brute-force attack --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">Realm</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.realm.LockOutRealm"</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- This Realm uses the UserDatabase configured in the global JNDI</span></span><br><span class="line"><span class="comment">             resources under the key "UserDatabase".  Any edits</span></span><br><span class="line"><span class="comment">             that are performed against this UserDatabase are immediately</span></span><br><span class="line"><span class="comment">             available for use by the Realm.  --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Realm</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.realm.UserDatabaseRealm"</span></span></span><br><span class="line"><span class="tag">               <span class="attr">resourceName</span>=<span class="string">"UserDatabase"</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">Realm</span>&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="tag">&lt;<span class="name">Host</span> <span class="attr">name</span>=<span class="string">"localhost"</span>  <span class="attr">appBase</span>=<span class="string">"webapps"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">unpackWARs</span>=<span class="string">"true"</span> <span class="attr">autoDeploy</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line">   	<span class="tag">&lt;<span class="name">Context</span> <span class="attr">path</span>=<span class="string">""</span> <span class="attr">docBase</span>=<span class="string">"../webapps/app"</span> <span class="attr">reloadable</span>=<span class="string">"true"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!-- SingleSignOn valve, share authentication between web applications</span></span><br><span class="line"><span class="comment">             Documentation at: /docs/config/valve.html --&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">        &lt;Valve className="org.apache.catalina.authenticator.SingleSignOn" /&gt;</span></span><br><span class="line"><span class="comment">        --&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!-- Access log processes all example.</span></span><br><span class="line"><span class="comment">             Documentation at: /docs/config/valve.html</span></span><br><span class="line"><span class="comment">             <span class="doctag">Note:</span> The pattern used is equivalent to using pattern="common" --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Valve</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.valves.AccessLogValve"</span> <span class="attr">directory</span>=<span class="string">"logs"</span></span></span><br><span class="line"><span class="tag">               <span class="attr">prefix</span>=<span class="string">"localhost_access_log"</span> <span class="attr">suffix</span>=<span class="string">".txt"</span></span></span><br><span class="line"><span class="tag">               <span class="attr">pattern</span>=<span class="string">"%h %l %u %t <span class="symbol">&amp;quot;</span>%r<span class="symbol">&amp;quot;</span> %s %b"</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">Host</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Engine</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Service</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Server</span>&gt;</span></span><br></pre></td></tr></table></figure><a id="more"></a>
+
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'2'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">springboot:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">tomcat:alpine</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">web</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">       <span class="bullet">-</span> <span class="number">80</span><span class="string">:8080</span></span><br><span class="line">    <span class="attr">volumes:</span> <span class="comment"># 容器数据卷挂载</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./java/app.war:/usr/local/tomcat/webapps/app.war</span> <span class="comment"># 挂载源码</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./java/server.xml:/usr/local/tomcat/conf/server.xml</span> <span class="comment"># 挂载源码</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./java/logs:/usr/local/tomcat/logs</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/etc/timezone:/etc/timezone</span> <span class="comment">#同步时区</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/etc/localtime:/etc/localtime</span> <span class="comment">#同步时区</span></span><br><span class="line">    <span class="attr">privileged:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">'net'</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">net:</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">bridge</span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="https://ae01.alicdn.com/kf/HTB1AlvVXk9E3KVjSZFr7610UVXaw.png" alt="iBoy wechat" style="width: 150px; max-width: 100%;">
+  <div>欢迎您扫一扫上面的微信公众号，订阅我的博客！</div>
+</div>
+
+      
+        <div class="reward-container">
+  <div></div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="https://ae01.alicdn.com/kf/HTB1eKnGXkWE3KVjSZSy760ocXXah.png" alt="iBoy 支持作者">
+        <p>支持作者</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>iBoy
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.iboy.tech/post/31230.html" title="Docker利用Tomcat部署war包">https://blog.iboy.tech/post/31230.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/post/undefined.html" rel="next" title="Rose画图">
+                  <i class="fa fa-chevron-left"></i> Rose画图
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/post/1079.html" rel="prev" title="操作系统">
+                  操作系统 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments" id="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80NDI4OS8yMDgyMQ=="></div>
+  </div>
+  
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="iBoy"
+    src="https://ae01.alicdn.com/kf/HTB1pZi7XlCw3KVjSZFu763AOpXa0.png">
+  <p class="site-author-name" itemprop="name">iBoy</p>
+  <div class="site-description" itemprop="description">知道的越多，不知道的越多...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+      
+<!--音乐播放器-->
+
+           <div >
+              <iframe frameborder="no" style="margin-top:25px;" border="0" marginwidth="0" marginheight="0" width="210" height="110" src="//music.163.com/outchain/player?type=2&id=479850552&auto=0&height=66"></iframe>
+           </div>
+
+
+
+<!--标签云-->
+
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Celery/" rel="tag">Celery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding/" rel="tag">Coding</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask/" rel="tag">Flask</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-SoketIO/" rel="tag">Flask SoketIO</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-Redis/" rel="tag">Flask-Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-SQLAlchemy/" rel="tag">Flask-SQLAlchemy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Frp/" rel="tag">Frp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/" rel="tag">Git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/" rel="tag">GitHub</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDE/" rel="tag">IDE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Markdown/" rel="tag">Markdown</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Miniconda/" rel="tag">Miniconda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python-Web/" rel="tag">Python Web</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Trojan/" rel="tag">Trojan</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/" rel="tag">Unity</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VsCode/" rel="tag">VsCode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web/" rel="tag">Web</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebSocket/" rel="tag">WebSocket</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/" rel="tag">npm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipenv/" rel="tag">pipenv</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E5%B0%9A/" rel="tag">云尚</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%8F%E7%A8%8B/" rel="tag">协程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%A8%E7%BA%BF%E5%B7%A5%E5%85%B7/" rel="tag">在线工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8A%93%E5%8C%85/" rel="tag">抓包</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8E%A5%E7%A0%81%E5%B9%B3%E5%8F%B0/" rel="tag">接码平台</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%B6%E8%97%8F/" rel="tag">收藏</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86/" rel="tag">数据库原理</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9A%91%E6%9C%9F%E7%AD%94%E8%BE%A9/" rel="tag">暑期答辩</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" rel="tag">科学上网</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">iBoy</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">440k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:40</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.1.js"></script>
+
+<script src="/js/motion.js?v=7.4.1.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.1.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.1.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.1.js"></script>
+
+
+  <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three.min.js"></script>
+    <script defer src="/lib/three/three-waves.min.js"></script>
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+<script src="/js/local-search.js?v=7.4.1.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+</body>
+</html>

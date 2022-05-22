@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#222">
+  <meta name="google-site-verification" content="kJUjgbvECplcwB4X3hhAHUuG5Bfr2JLsTpEMZ6fRR-o">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: true,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="一、SSH配置1、更改Root用户密码初次使用先从管理员切换到root用户，并更改root用户密码1234切换Root用户sudo su root为root用户设置密码passwd root">
+<meta property="og:type" content="article">
+<meta property="og:title" content="失物招领Dokcer化部署">
+<meta property="og:url" content="https://blog.iboy.tech/post/493714.html">
+<meta property="og:site_name" content="一名不学无术的伪程序猿">
+<meta property="og:description" content="一、SSH配置1、更改Root用户密码初次使用先从管理员切换到root用户，并更改root用户密码1234切换Root用户sudo su root为root用户设置密码passwd root">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/23/f1044b5363673ba97e7dfd61c5dc0937.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/23/75f1d8904352a246428355bb4757d68c.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/23/42e1ecbabac39741cfe4be888ff07aee.png">
+<meta property="article:published_time" content="2020-07-27T04:17:13.000Z">
+<meta property="article:modified_time" content="2022-05-20T09:05:57.928Z">
+<meta property="article:author" content="iBoy">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/23/f1044b5363673ba97e7dfd61c5dc0937.png">
+  <link rel="canonical" href="https://blog.iboy.tech/post/493714">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>失物招领Dokcer化部署 | 一名不学无术的伪程序猿</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一名不学无术的伪程序猿</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>日程表</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/iboy-tech" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.iboy.tech/post/493714.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://ae01.alicdn.com/kf/HTB1pZi7XlCw3KVjSZFu763AOpXa0.png">
+      <meta itemprop="name" content="iBoy">
+      <meta itemprop="description" content="知道的越多，不知道的越多...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一名不学无术的伪程序猿">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          失物招领Dokcer化部署
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-27 12:17:13" itemprop="dateCreated datePublished" datetime="2020-07-27T12:17:13+08:00">2020-07-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-20 17:05:57" itemprop="dateModified" datetime="2022-05-20T17:05:57+08:00">2022-05-20</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、SSH配置"><a href="#一、SSH配置" class="headerlink" title="一、SSH配置"></a>一、SSH配置</h2><h3 id="1、更改Root用户密码"><a href="#1、更改Root用户密码" class="headerlink" title="1、更改Root用户密码"></a>1、更改Root用户密码</h3><p>初次使用先从管理员切换到root用户，并更改root用户密码</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">切换Root用户</span><br><span class="line">sudo su root</span><br><span class="line">为root用户设置密码</span><br><span class="line">passwd root</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+<p><img src="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/23/f1044b5363673ba97e7dfd61c5dc0937.png" alt="image-20200810185454159"></p>
+<h3 id="更改SSH默认配置-并重启SSH服务"><a href="#更改SSH默认配置-并重启SSH服务" class="headerlink" title="更改SSH默认配置 并重启SSH服务"></a>更改SSH默认配置 并重启SSH服务</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sed -i "s/#PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config \</span><br><span class="line">&amp;&amp; sed -i "s/#PasswordAuthentication.*/PasswordAuthentication yes/g" /etc/ssh/sshd_config \</span><br><span class="line">&amp;&amp; sed -i "s/#PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config \</span><br><span class="line">&amp;&amp; /etc/init.d/ssh restart</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、Docker安装、启动、镜像加速、Docker-Compose安装"><a href="#二、Docker安装、启动、镜像加速、Docker-Compose安装" class="headerlink" title="二、Docker安装、启动、镜像加速、Docker Compose安装"></a>二、Docker安装、启动、镜像加速、Docker Compose安装</h2><p>使用脚本自动安装在测试或开发环境中 Docker 官方为了简化安装流程，提供了一套便捷的安装脚本，可以通过 –mirror 选项使用国内源进行安装，执行这组命令后，脚本就会自动的将一切准备工作做好，并且把 Docker CE 的稳定(stable)版本安装在系统中并且设置开机自启。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL get.docker.com -o get-docker.sh \</span><br><span class="line">&amp;&amp; sudo sh get-docker.sh --mirror Aliyun \</span><br><span class="line">&amp;&amp; sudo systemctl enable docker \</span><br><span class="line">&amp;&amp; sudo systemctl start docker \</span><br><span class="line">&amp;&amp; echo " &#123; \</span><br><span class="line">\"registry-mirrors\": [ </span><br><span class="line">\"https://mirror.ccs.tencentyun.com\", </span><br><span class="line">\"https://eqcxmbvw.mirror.aliyuncs.com\" </span><br><span class="line">] </span><br><span class="line">&#125;" &gt;  /etc/docker/daemon.json \</span><br><span class="line">&amp;&amp; service docker restart \</span><br><span class="line">&amp;&amp; docker info \</span><br><span class="line">&amp;&amp; curl -k -L https://github.wuyanzheshui.workers.dev/docker/compose/releases/download/1.26.2/docker-compose-`uname -s`-`uname -m` &gt; /usr/local/bin/docker-compose \</span><br><span class="line">&amp;&amp; chmod +x /usr/local/bin/docker-compose \</span><br><span class="line">&amp;&amp; docker-compose</span><br></pre></td></tr></table></figure>
+
+<h3 id="Docker可视化面板安装（汉化版）"><a href="#Docker可视化面板安装（汉化版）" class="headerlink" title="Docker可视化面板安装（汉化版）"></a>Docker可视化面板安装（汉化版）</h3><p>汉化版的没有更新提示</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">-p 9000:9000 \</span><br><span class="line">-v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">-v portainer_data:/data \</span><br><span class="line">--name portainer \</span><br><span class="line">--restart=always \</span><br><span class="line">registry.cn-zhangjiakou.aliyuncs.com/ctgu/portainer</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、开放安全组端口"><a href="#三、开放安全组端口" class="headerlink" title="三、开放安全组端口"></a>三、开放安全组端口</h2><blockquote>
+<p>安装完成之后记得去阿里云或者腾讯云控制台开放对应端口，这里是<strong>9000</strong>端口</p>
+<p>官方帮助文档：<a href="https://cloud.tencent.com/document/product/213/39740" target="_blank" rel="noopener">https://cloud.tencent.com/document/product/213/39740</a></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/23/75f1d8904352a246428355bb4757d68c.png" alt="image-20200810190047023"></p>
+<h2 id="四、服务器迁移"><a href="#四、服务器迁移" class="headerlink" title="四、服务器迁移"></a>四、服务器迁移</h2><h3 id="1、导出数据库文件，并删除mysql的安装文件"><a href="#1、导出数据库文件，并删除mysql的安装文件" class="headerlink" title="1、导出数据库文件，并删除mysql的安装文件"></a>1、导出数据库文件，并删除mysql的安装文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it mysql sh -c "mysqldump -h127.0.0.1 -uroot -p数据库密码 swzl &gt; /docker-entrypoint-initdb.d/init.sql" \</span><br><span class="line">&amp;&amp; chmod +x /www/server/mysql/init/* \</span><br><span class="line">&amp;&amp; rm -rf /www/server/mysql/data/*</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、网站整站打包"><a href="#2、网站整站打包" class="headerlink" title="2、网站整站打包"></a>2、网站整站打包</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd ~/.. \</span><br><span class="line">&amp;&amp; tar -zcvf www.tar.gz www</span><br><span class="line">scp www.tar.gz root@新服务的ip:..</span><br><span class="line"></span><br><span class="line">scp www.tar.gz root@49.235.194.44:..</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、网站证书"><a href="#五、网站证书" class="headerlink" title="五、网站证书"></a>五、网站证书</h2><h4 id="CDN证书需要每年到期后手动去云服务器控制台申请"><a href="#CDN证书需要每年到期后手动去云服务器控制台申请" class="headerlink" title="CDN证书需要每年到期后手动去云服务器控制台申请"></a>CDN证书需要每年到期后手动去云服务器控制台申请</h4><p>参考：<a href="https://blog.csdn.net/javaxw666/article/details/96602668" target="_blank" rel="noopener">https://blog.csdn.net/javaxw666/article/details/96602668</a></p>
+<h2 id="五、网站证书设置定时任务，过期后自动替换"><a href="#五、网站证书设置定时任务，过期后自动替换" class="headerlink" title="五、网站证书设置定时任务，过期后自动替换"></a>五、网站证书设置定时任务，过期后自动替换</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">首次申请证书</span><br><span class="line">tar xvf www.tar.gz \</span><br><span class="line">&amp;&amp; /www/server/nginx/cert \</span><br><span class="line">&amp;&amp; docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、定时任务设置"><a href="#六、定时任务设置" class="headerlink" title="六、定时任务设置"></a>六、定时任务设置</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">新建定时任务</span></span><br><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0 1 * * * cd /www/server/qiniu/ &amp;&amp; python main.py &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">0 0 */30 * * docker exec acme.sh --cron	--force &gt; /dev/null &amp;&amp; docker restart nginx</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看设置的定时任务"><a href="#查看设置的定时任务" class="headerlink" title="查看设置的定时任务"></a>查看设置的定时任务</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -l</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/23/42e1ecbabac39741cfe4be888ff07aee.png" alt="image-20210123102953430"></p>
+<h2 id="七、数据库注意事项"><a href="#七、数据库注意事项" class="headerlink" title="七、数据库注意事项"></a>七、数据库注意事项</h2><h3 id="1、数据库每天定时备份"><a href="#1、数据库每天定时备份" class="headerlink" title="1、数据库每天定时备份"></a>1、数据库每天定时备份</h3><p>备份用的七牛云OSS，每天定时备份，需要先安装依赖，然后添加定时任务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">安装依赖</span><br><span class="line">apt install python-pip \</span><br><span class="line">&amp;&amp; pip install qiniu&#x3D;&#x3D;7.2.9</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">每晚凌晨1点备份数据库，保留最近30天的数据库，</span><br><span class="line">每隔30天检查一次证书</span><br><span class="line"><span class="meta">#</span><span class="bash">添加定时任务</span></span><br><span class="line">crontab -e</span><br><span class="line">0 1 * * * cd /www/server/qiniu/ &amp;&amp; python main.py &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">0 0 */30 * * docker exec acme.sh --cron	--force &gt; /dev/null &amp;&amp; docker restart nginx</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、数据库目录权限问题"><a href="#2、数据库目录权限问题" class="headerlink" title="2、数据库目录权限问题"></a>2、数据库目录权限问题</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#数据库的权限</span><br><span class="line">chmod 777 &#x2F;www&#x2F;server&#x2F;mysql&#x2F;data</span><br></pre></td></tr></table></figure>
+
+<h1 id="相关资源"><a href="#相关资源" class="headerlink" title="相关资源"></a>相关资源</h1><blockquote>
+<p>👉 Docker练习平台：<a href="http://play-with-docker.com" target="_blank" rel="noopener">http://play-with-docker.com</a></p>
+<p>👉 Docker官方文档： <a href="https://docs.docker.com" target="_blank" rel="noopener">https://docs.docker.com</a></p>
+<p>👉 Docker官网：<a href="https://www.docker.com" target="_blank" rel="noopener">https://www.docker.com</a></p>
+<p>👉 Docker Hub：<a href="https://hub.docker.com" target="_blank" rel="noopener">https://hub.docker.com</a></p>
+<p>👉 菜鸟教程Docker： <a href="https://www.runoob.com/docker/docker-tutorial.html" target="_blank" rel="noopener">https://www.runoob.com/docker/docker-tutorial.html</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="https://ae01.alicdn.com/kf/HTB1AlvVXk9E3KVjSZFr7610UVXaw.png" alt="iBoy wechat" style="width: 150px; max-width: 100%;">
+  <div>欢迎您扫一扫上面的微信公众号，订阅我的博客！</div>
+</div>
+
+      
+        <div class="reward-container">
+  <div></div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="https://ae01.alicdn.com/kf/HTB1eKnGXkWE3KVjSZSy760ocXXah.png" alt="iBoy 支持作者">
+        <p>支持作者</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>iBoy
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.iboy.tech/post/493714.html" title="失物招领Dokcer化部署">https://blog.iboy.tech/post/493714.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i> Docker</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/post/493759.html" rel="next" title="暑期培训-Docker">
+                  <i class="fa fa-chevron-left"></i> 暑期培训-Docker
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/post/14399.html" rel="prev" title="Miniconda使用">
+                  Miniconda使用 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments" id="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80NDI4OS8yMDgyMQ=="></div>
+  </div>
+  
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、SSH配置"><span class="nav-number">1.</span> <span class="nav-text">一、SSH配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、更改Root用户密码"><span class="nav-number">1.1.</span> <span class="nav-text">1、更改Root用户密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更改SSH默认配置-并重启SSH服务"><span class="nav-number">1.2.</span> <span class="nav-text">更改SSH默认配置 并重启SSH服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Docker安装、启动、镜像加速、Docker-Compose安装"><span class="nav-number">2.</span> <span class="nav-text">二、Docker安装、启动、镜像加速、Docker Compose安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker可视化面板安装（汉化版）"><span class="nav-number">2.1.</span> <span class="nav-text">Docker可视化面板安装（汉化版）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、开放安全组端口"><span class="nav-number">3.</span> <span class="nav-text">三、开放安全组端口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、服务器迁移"><span class="nav-number">4.</span> <span class="nav-text">四、服务器迁移</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、导出数据库文件，并删除mysql的安装文件"><span class="nav-number">4.1.</span> <span class="nav-text">1、导出数据库文件，并删除mysql的安装文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、网站整站打包"><span class="nav-number">4.2.</span> <span class="nav-text">2、网站整站打包</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、网站证书"><span class="nav-number">5.</span> <span class="nav-text">五、网站证书</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CDN证书需要每年到期后手动去云服务器控制台申请"><span class="nav-number">5.0.1.</span> <span class="nav-text">CDN证书需要每年到期后手动去云服务器控制台申请</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、网站证书设置定时任务，过期后自动替换"><span class="nav-number">6.</span> <span class="nav-text">五、网站证书设置定时任务，过期后自动替换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、定时任务设置"><span class="nav-number">7.</span> <span class="nav-text">六、定时任务设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看设置的定时任务"><span class="nav-number">7.1.</span> <span class="nav-text">查看设置的定时任务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、数据库注意事项"><span class="nav-number">8.</span> <span class="nav-text">七、数据库注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、数据库每天定时备份"><span class="nav-number">8.1.</span> <span class="nav-text">1、数据库每天定时备份</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、数据库目录权限问题"><span class="nav-number">8.2.</span> <span class="nav-text">2、数据库目录权限问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关资源"><span class="nav-number"></span> <span class="nav-text">相关资源</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="iBoy"
+    src="https://ae01.alicdn.com/kf/HTB1pZi7XlCw3KVjSZFu763AOpXa0.png">
+  <p class="site-author-name" itemprop="name">iBoy</p>
+  <div class="site-description" itemprop="description">知道的越多，不知道的越多...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+      
+<!--音乐播放器-->
+
+           <div >
+              <iframe frameborder="no" style="margin-top:25px;" border="0" marginwidth="0" marginheight="0" width="210" height="110" src="//music.163.com/outchain/player?type=2&id=479850552&auto=0&height=66"></iframe>
+           </div>
+
+
+
+<!--标签云-->
+
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Celery/" rel="tag">Celery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding/" rel="tag">Coding</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask/" rel="tag">Flask</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-SoketIO/" rel="tag">Flask SoketIO</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-Redis/" rel="tag">Flask-Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-SQLAlchemy/" rel="tag">Flask-SQLAlchemy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Frp/" rel="tag">Frp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/" rel="tag">Git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/" rel="tag">GitHub</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDE/" rel="tag">IDE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Markdown/" rel="tag">Markdown</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Miniconda/" rel="tag">Miniconda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python-Web/" rel="tag">Python Web</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Trojan/" rel="tag">Trojan</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/" rel="tag">Unity</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VsCode/" rel="tag">VsCode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web/" rel="tag">Web</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebSocket/" rel="tag">WebSocket</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/" rel="tag">npm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipenv/" rel="tag">pipenv</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E5%B0%9A/" rel="tag">云尚</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%8F%E7%A8%8B/" rel="tag">协程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%A8%E7%BA%BF%E5%B7%A5%E5%85%B7/" rel="tag">在线工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8A%93%E5%8C%85/" rel="tag">抓包</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8E%A5%E7%A0%81%E5%B9%B3%E5%8F%B0/" rel="tag">接码平台</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%B6%E8%97%8F/" rel="tag">收藏</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86/" rel="tag">数据库原理</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9A%91%E6%9C%9F%E7%AD%94%E8%BE%A9/" rel="tag">暑期答辩</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" rel="tag">科学上网</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">iBoy</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">440k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:40</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.1.js"></script>
+
+<script src="/js/motion.js?v=7.4.1.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.1.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.1.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.1.js"></script>
+
+
+  <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three.min.js"></script>
+    <script defer src="/lib/three/three-waves.min.js"></script>
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+<script src="/js/local-search.js?v=7.4.1.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+</body>
+</html>

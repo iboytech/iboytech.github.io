@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#222">
+  <meta name="google-site-verification" content="kJUjgbvECplcwB4X3hhAHUuG5Bfr2JLsTpEMZ6fRR-o">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: true,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="前言前段时间因为有任务，需要四个电商(京东、淘宝、天猫、拼多多)的数据。而其中京东的没什么反爬，基本是随便抓。拼多多的加密参数有点复杂，而且变化也挺频繁的，用的是 selenium，也没什么可提的。抓淘宝和天猫因为用 selenium 滑块过不了，于是就改成了 pyppeteer。现在我说一下使用的心得。有些细节因为当时没有记录，现在也记不起来了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pyppeteer 手册">
+<meta property="og:url" content="https://blog.iboy.tech/post/63440.html">
+<meta property="og:site_name" content="一名不学无术的伪程序猿">
+<meta property="og:description" content="前言前段时间因为有任务，需要四个电商(京东、淘宝、天猫、拼多多)的数据。而其中京东的没什么反爬，基本是随便抓。拼多多的加密参数有点复杂，而且变化也挺频繁的，用的是 selenium，也没什么可提的。抓淘宝和天猫因为用 selenium 滑块过不了，于是就改成了 pyppeteer。现在我说一下使用的心得。有些细节因为当时没有记录，现在也记不起来了。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-19T05:50:15.000Z">
+<meta property="article:modified_time" content="2022-05-20T09:05:57.927Z">
+<meta property="article:author" content="iBoy">
+<meta name="twitter:card" content="summary">
+  <link rel="canonical" href="https://blog.iboy.tech/post/63440">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>pyppeteer 手册 | 一名不学无术的伪程序猿</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一名不学无术的伪程序猿</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>日程表</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/iboy-tech" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.iboy.tech/post/63440.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://ae01.alicdn.com/kf/HTB1pZi7XlCw3KVjSZFu763AOpXa0.png">
+      <meta itemprop="name" content="iBoy">
+      <meta itemprop="description" content="知道的越多，不知道的越多...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一名不学无术的伪程序猿">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          pyppeteer 手册
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-19 13:50:15" itemprop="dateCreated datePublished" datetime="2021-01-19T13:50:15+08:00">2021-01-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-20 17:05:57" itemprop="dateModified" datetime="2022-05-20T17:05:57+08:00">2022-05-20</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>15k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>14 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前段时间因为有任务，需要四个电商(京东、淘宝、天猫、拼多多)的数据。而其中京东的没什么反爬，基本是随便抓。拼多多的加密参数有点复杂，而且变化也挺频繁的，用的是 selenium，也没什么可提的。抓淘宝和天猫因为用 selenium 滑块过不了，于是就改成了 pyppeteer。现在我说一下使用的心得。有些细节因为当时没有记录，现在也记不起来了。</p><a id="more"></a>
+<p>首先 <code>pip install pyppeteer</code> , 这时候我们先看一下 websockets 这个库的版本，因为必须保证这个库是 7.0 的版本。8.0 和 6.0 虽然可以使用，但是在访问多个网页会出现一些无法解决的异常。现在安装 pyppeteer，websockets 的版本默认是 8.0，我们需要先 <code>pip uninstall websockets</code> 卸载 8.0，然后 <code>pip install websockets==7.0</code>。然后我们按照 <a href="https://link.ld246.com/forward?goto=https%3A%2F%2Fgithub.com%2Fmiyakogi%2Fpyppeteer%2Fpull%2F160%2Ffiles" target="_blank" rel="noopener">https://github.com/miyakogi/pyppeteer/pull/160/files</a> 这个网页修改 pyppeteer 的源码(如果是 anaconda，则路径是 anaconda 安装路径\Lib\site-packages\pyppeteer\connection.py 这个文件)。这样准备工作就完成了，这样操作之后就可以避免很多异常。</p>
+<p>需要这么费劲的折腾，是因为 pyppeteer 这个库已经很久没有做大的更新了，虽然有点小的改动，但是基本的 bug 还是没有解决。所以如果有 js 基础，最好还是使用 JavaScript 的 puppeteer 这个工具，这个是谷歌出品的，一直在更新维护，基本没有 bug。</p>
+<p><strong>补充：有时候会出现明明网页加载完成了，但是还是会出现超时的情况。不知道是什么 bug，解决方法也很简单，只要捕获这个异常，然后该做啥做啥。</strong></p>
+<p><strong>以下有的方法前面带 coroutine 这个关键字，有点没有，这是因为带这个参数的方法都是异步方法，这种方法必须被 async 关键字修饰，调用的时候也必须 await 关键字修饰。不过我们既然使用浏览器爬虫了，肯定已经不在乎效率了，异步等于在等网站封，所以只需要遵守某些规则即可(不懂的请百度 asyncio 的使用)，实际上还是同步运行。另外，虽然 page.on（）这个方法是存在的，但是官方文档中并未给出详细的说明，甚至我查看 pyppeteer 的源码也未找到这个函数，不知道是怎么回事。但是参考 puppeteer 的文档也是可以用的，不过报错居多，我也就没有深究了。</strong></p>
+<h2 id="API-参考"><a href="#API-参考" class="headerlink" title="API 参考"></a>API 参考</h2><h2 id="启动器"><a href="#启动器" class="headerlink" title="启动器"></a>启动器</h2><ol>
+<li>pyppeteer.launcher.launch()<br> 启动 Chrome 进程并返回浏览器实例</li>
+</ol>
+<p>参数：</p>
+<ul>
+<li><code>ignoreHTTPSErrors</code>（bool）：是否忽略 HTTPS 错误。默认为 <code>False</code></li>
+<li><code>headless</code>（bool）：是否在无头模式下运行浏览器。默认为 <code>True</code> 除非 <code>appMode</code> 或 <code>devtools</code> 选项 <code>True</code></li>
+<li><code>executablePath</code> （str）：运行 Chromium 或 Chrome 可执行文件的路径，而不是默认捆绑的 Chromium</li>
+<li><code>slowMo</code> （int | float）：按指定的毫秒数减慢 pyppeteer 操作。</li>
+<li><code>args</code> （List [str]）：传递给浏览器进程的附加参数（标志）。</li>
+<li><code>dumpio</code>（bool）：是否管道浏览器进程 stdout 和 stderr 进入 <code>process.stdout</code> 和 <code>process.stderr</code>。默认为 <code>False</code>。</li>
+<li><code>userDataDir</code> （str）：用户数据目录的路径。</li>
+<li><code>env</code>（dict）：指定浏览器可见的环境变量。默认与 python 进程相同。</li>
+<li><code>devtools</code>（bool）：是否为每个选项卡自动打开 DevTools 面板。如果是此选项 <code>True</code>，<code>headless</code> 则将设置该选项 <code>False</code>。</li>
+<li><code>logLevel</code>（int | str）：用于打印日志的日志级别。默认值与根记录器相同。</li>
+<li><code>autoClose</code>（bool）：脚本完成时自动关闭浏览器进程。默认为 <code>True</code>。</li>
+<li><code>loop</code>（asyncio.AbstractEventLoop）：事件循环（<strong>实验</strong>）。</li>
+</ul>
+<hr>
+<ul>
+<li>ignoreHTTPSErrors：意思很明显，不解释</li>
+<li>headless：不解释</li>
+<li>executablePath：这个一般是默认的路径就行</li>
+<li>slowMo：我一般会加这个参数，至于效果吗，好像有点。</li>
+<li>args：常用的有[‘–no-sandbox’,’–disable-gpu’, ‘–disable-setuid-sandbox’,’–window-size=1440x900’]</li>
+<li>dumpio: 不知道为什么，如果不加 dumpio=True 有时会出现浏览器卡顿</li>
+<li>userDataDir：selenium 的 userdata 可以保留 cookie，下次启动可以达到免登录，而这个参数没什么用</li>
+<li>env：看需求</li>
+<li>devtools：用的不深，没用过</li>
+<li>logLevel：没什么用，在 Linux 下还是打印大量的日志</li>
+<li>autoClose：默认就好，不过如果你需要保持浏览器状态，可以不关闭，下次直接连接这个已存在的浏览器</li>
+<li>loop：暂时不知道有什么用</li>
+</ul>
+<ol>
+<li>pyppeteer.launcher.connect()<br> 连接到现有的 Chrome</li>
+</ol>
+<p>参数：</p>
+<ul>
+<li><code>browserWSEndpoint</code>（str）：要连接的浏览器 WebSocket 端点。（<strong>必填</strong>）</li>
+<li><code>ignoreHTTPSErrors</code>（bool）：是否忽略 HTTPS 错误。默认为 <code>False</code>。</li>
+<li><code>slowMo</code> （int | float）：按指定的毫秒数减慢 pyppeteer 的速度。</li>
+<li><code>logLevel</code>（int | str）：用于打印日志的日志级别。默认值与根记录器相同。</li>
+<li><code>loop</code>（asyncio.AbstractEventLoop）：事件循环（<strong>实验</strong>）。</li>
+</ul>
+<p>browserWSEndpoint：格式是 <code>ws://${host}:${port}/devtools/browser/&lt;id&gt;</code>。以前浏览器的 wsEndpoint 这个值，可以通过 <code>brower = pyppeteer.launcher.launch()</code> <code>dev = brower. wsEndpoint</code> 保存这个值就可以下次启动了</p>
+<ol>
+<li>pyppeteer.launcher.executablePath()<br> 获取默认 Chrome 的可执行路径</li>
+</ol>
+<h2 id="浏览器类"><a href="#浏览器类" class="headerlink" title="浏览器类"></a>浏览器类</h2><p>pyppeteer.browser.Browser()<br> 这个类是由 launch()返回的实例</p>
+<ul>
+<li>browserContexts： 返回所有打开的浏览器上下文的列表，在新创建的浏览器中，这将返回单个实例</li>
+<li>coroutine close()： 关闭连接并终止浏览器进程</li>
+<li>coroutine createIncognitoBrowserContext(): 创建一个新的隐身浏览器上下文。这不会与其他浏览器上下文共享 cookie /缓存</li>
+<li>coroutine disconnect(): 断开浏览器</li>
+<li>coroutine newPage(): 在此浏览器上创建新页面并返回其对象</li>
+<li>coroutine pages(): 获取此浏览器的所有页面。返回格式为列表，包含所有页面</li>
+<li>process：返回此浏览器的进程</li>
+<li>target(): 获取浏览器中所有活动目标的列表</li>
+<li>coroutine userAgent()：返回浏览器的原始 UA</li>
+<li>coroutine version(): 获取浏览器的版本</li>
+<li>wsEndpoint: 返回 WebSocket 端点 url</li>
+</ul>
+<h2 id="页面类"><a href="#页面类" class="headerlink" title="页面类"></a>页面类</h2><p>pyppeteer.page.Page()<br> 由 brower.newPage()或者 brower.pages()得到</p>
+<ul>
+<li>coroutine J()：别名 querySelector(),看名字就知道通过 CSS 选择器来选出元素</li>
+<li>coroutine JJ(): 别名 querySelectorAll()</li>
+<li>coroutine Jeval(): 功能比 page.J()功能多一点，可以选出网页文本或者属性指</li>
+<li>coroutine JJeval(): querySelectorAllEval()</li>
+<li>coroutine Jx(): 别名 xpath()</li>
+<li>coroutine addScriptTag(): 将脚本标记添加到此页面, 返回 ElementHandle<br> 其中一个 url，path 或 content 选择是必要的。<ul>
+<li><code>url</code> （字符串）：要添加的脚本的 URL。</li>
+<li><code>path</code> （字符串）：要添加的本地 JavaScript 文件的路径。</li>
+<li><code>content</code> （字符串）：要添加的 JavaScript 字符串。</li>
+<li><code>type</code>（字符串）：脚本类型。使用 <code>module</code> 以加载一个 JavaScript ES6 模块。</li>
+</ul>
+</li>
+<li>coroutine addStyleTag(): 将样式或链接标记添加到此页面, 返回 ElementHandle<br> 其中一个 <code>url</code>，<code>path</code> 或 <code>content</code> 选择是必要的。<ul>
+<li><code>url</code> （字符串）：要添加的链接标记的 URL。</li>
+<li><code>path</code> （字符串）：要添加的本地 CSS 文件的路径。</li>
+<li><code>content</code> （字符串）：要添加的 CSS 字符串。</li>
+</ul>
+</li>
+<li>coroutine authenticate(): 提供 http 身份验证的凭据</li>
+<li>coroutine bringToFront(): 将页面置于前面</li>
+<li>browser: 获取该页面所属的浏览器</li>
+<li>coroutine click(): 相当于鼠标左键单击匹配的元素,参数是 CSS 选择器的字符串。如果没有匹配到元素，则会引发 PageError<br> 可选参数：<ul>
+<li><code>button</code>（str）： ，left，right 或 middle，默认为 left。</li>
+<li><code>clickCount</code> （int）：默认为 1。</li>
+<li><code>delay</code>（int | float）：等待时间 mousedown 和 mouseup 以毫秒为单位的时间。默认为 0。</li>
+</ul>
+</li>
+</ul>
+<p><strong>注意</strong><br> 如果此方法触发导航事件并且存在单独的事件，则 waitForNavigation()最终可能会出现产生意外结果的竞争条件。单击并等待导航的正确模式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">​</span><br></pre></td></tr></table></figure>
+<p>await asyncio.gather(</p>
+<pre><code>page.waitForNavigation(waitOptions),
+
+page.click(selector, clickOptions),</code></pre><p>)<br>​```</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">大概意思是 click()触发如果会跳转网页，则需要 page.waitForNavigation()这个函数来等待。但点击事件和触发事件是同时的，所以需要将这两个事件绑定，代码如上。</span><br><span class="line"></span><br><span class="line">- coroutine close(): 关闭此页面</span><br><span class="line"></span><br><span class="line">- coroutine content(): 获取页面的完整 HTML 内容</span><br><span class="line"></span><br><span class="line">- coroutine cookies(): 获取 cookie。参数为 URL，如果未指定 URL，则此方法返回当前页面 URL 的 cookie。如果指定了 URL，则仅返回这些 URL 的 cookie</span><br><span class="line"></span><br><span class="line">- coverage： 返回 coverage</span><br><span class="line"></span><br><span class="line">- coroutine deleteCookie(): 删除 cookie，参数为 cookie 字段参数，比如 name、url、domain、path 等</span><br><span class="line"></span><br><span class="line">- coroutine emulate(): 模拟给定的设备指标和用户代理。相当于同时设置了 setUserAgent()、setViewport()</span><br><span class="line"></span><br><span class="line">- coroutine emulateMedia(): 模拟页面的 CSS 媒体类型。参数为：screen、print、None。</span><br><span class="line"></span><br><span class="line">- coroutine evaluate(): 在浏览器上执行 js 并获取结果</span><br><span class="line"></span><br><span class="line">- coroutine evaluateHandle(): 同上，只是会返回一个值。至于是什么，没用过</span><br><span class="line"></span><br><span class="line">- coroutine evaluateOnNewDocument(): 也是执行 js，至于区别。好像是在页面跳转时执行</span><br><span class="line"></span><br><span class="line">- coroutine exposeFunction(): 将 python 函数添加到浏览器的 window 对象中 name。不知道有什么用</span><br><span class="line"></span><br><span class="line">- coroutine focus(): 聚焦匹配的元素。如果不存在，抛出 PageError</span><br><span class="line"></span><br><span class="line">- frames：获取此页面的所有 frame</span><br><span class="line"></span><br><span class="line">- coroutine goBack()：返回上一个网页。如果不存在，则返回 None</span><br><span class="line"></span><br><span class="line">- coroutine goForward(): 跳转到下一页。如果不存在，则返回 None</span><br><span class="line"></span><br><span class="line">- coroutine goto(): 访问某个 URL。</span><br><span class="line">   参数：</span><br><span class="line"></span><br><span class="line">  - url：。。。</span><br><span class="line">  - timeout：。。。</span><br><span class="line">  - waitUntil：什么情况下算成功访问。没看懂参数的几个值有什么用</span><br><span class="line"></span><br><span class="line">- coroutine hover(): 鼠标悬停匹配的元素</span><br><span class="line"></span><br><span class="line">- isClosed(): 判断页面是否关闭</span><br><span class="line"></span><br><span class="line">- keyboard： 获取 keyboard 对象</span><br><span class="line"></span><br><span class="line">- mainFrame： 获取 frame 页面的主要内容</span><br><span class="line"></span><br><span class="line">- coroutine metrics(): 好像是获取页面中的信息</span><br><span class="line"></span><br><span class="line">- mouse： 获取 mouse 对象</span><br><span class="line"></span><br><span class="line">- coroutine reload(): 刷新网页</span><br><span class="line"></span><br><span class="line">- coroutine screenshot(): 截图</span><br><span class="line">   参数：</span><br><span class="line"></span><br><span class="line">  - &#96;path&#96;（str）：保存图像的文件路径。屏幕截图类型将从文件扩展名中推断出来。</span><br><span class="line"></span><br><span class="line">  - &#96;type&#96;（str）：指定屏幕截图类型，可以是 &#96;jpeg&#96; 或 &#96;png&#96;。默认为 &#96;png&#96;。</span><br><span class="line"></span><br><span class="line">  - &#96;quality&#96;（int）：图像的质量，在 0-100 之间。不适用于 &#96;png&#96; 图像。</span><br><span class="line"></span><br><span class="line">  - &#96;fullPage&#96;（bool）：如果为 true，请截取完整的可滚动页面。默认为 &#96;False&#96;。</span><br><span class="line"></span><br><span class="line">  -</span><br></pre></td></tr></table></figure>
+<pre><code>clip
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    （字典）：指定页面剪切区域的对象。此选项应包含以下字段：     </span><br><span class="line"></span><br><span class="line">    - &#96;x&#96; （int）：剪辑区域左上角的 x 坐标。</span><br><span class="line">    - &#96;y&#96; （int）：剪辑区域左上角的 y 坐标。</span><br><span class="line">    - &#96;width&#96; （int）：剪切区域的宽度。</span><br><span class="line">    - &#96;height&#96; （int）：剪切区域的高度。</span><br><span class="line"></span><br><span class="line">  - &#96;omitBackground&#96; （bool）：隐藏默认的白色背景并允许捕获具有透明度的屏幕截图。</span><br><span class="line"></span><br><span class="line">  - &#96;encoding&#96;（str）：图像的编码可以是 &#96;&#39;base64&#39;&#96; 或 &#96;&#39;binary&#39;&#96;。默认为 &#96;&#39;binary&#39;&#96;。</span><br><span class="line"></span><br><span class="line">- coroutine select(): 选择选项并返回所选值。如果未找到元素，抛出 ElementHandleError。</span><br><span class="line"></span><br><span class="line">- coroutine setCacheEnabled(): 为每个请求启用&#x2F;禁用缓存。默认启用</span><br><span class="line"></span><br><span class="line">- coroutine setContent(): 将 HTML 加到网页</span><br><span class="line"></span><br><span class="line">- coroutine setCookie(): 设置 cookie</span><br><span class="line"></span><br><span class="line">- setDefaultNavigationTimeout(): 更改默认的最大导航超时。默认 30 秒</span><br><span class="line"></span><br><span class="line">- coroutine setJavaScriptEnabled(): 设置 JavaScript 启用&#x2F;禁用</span><br><span class="line"></span><br><span class="line">- coroutine setExtraHTTPHeaders(): 设置默认 headers 头，值为一个字典</span><br><span class="line"></span><br><span class="line">- coroutine setRequestInterception(): 启用&#x2F;禁用请求拦截。配合 page.on()</span><br><span class="line"></span><br><span class="line">- coroutine setUserAgent(): 设置要在此页面中使用的 UA</span><br><span class="line"></span><br><span class="line">- coroutine setViewport(): 设置窗口大小。</span><br><span class="line">   参数：</span><br><span class="line"></span><br><span class="line">  - &#96;width&#96; （int）：以像素为单位的页面宽度。</span><br><span class="line">  - &#96;height&#96; （int）：以像素为单位的页面高度。</span><br><span class="line">  - &#96;deviceScaleFactor&#96; （float）：默认为 1.0。</span><br><span class="line">  - &#96;isMobile&#96;（bool）：默认为 &#96;False&#96;。</span><br><span class="line">  - &#96;hasTouch&#96;（bool）：默认为 &#96;False&#96;。</span><br><span class="line">  - &#96;isLandscape&#96;（bool）：默认为 &#96;False&#96;。</span><br><span class="line"></span><br><span class="line">- coroutine tap(): 点击与之匹配的元素</span><br><span class="line"></span><br><span class="line">- coroutine title(): 获取页面标签</span><br><span class="line"></span><br><span class="line">- tracing：获取 tracing 对象</span><br><span class="line"></span><br><span class="line">- coroutine type(): 往输入框中输入内容，第一个参数为 CSS 选择器，第二个为文本内容</span><br><span class="line"></span><br><span class="line">- url：获取此页面的 url</span><br><span class="line"></span><br><span class="line">- waitFor(): 等待页面上匹配的函数，超时或元素。参数可以是 int 或者 float，单位毫秒。也可以是 CSS 选择器</span><br><span class="line"></span><br><span class="line">- waitForFunction():</span><br><span class="line"></span><br><span class="line">- coroutine waitForNavigation(): 等到网页跳转</span><br><span class="line"></span><br><span class="line">- coroutine waitForRequest(): 等待请求</span><br><span class="line"></span><br><span class="line">- coroutine waitForResponse(): 等待回应</span><br><span class="line"></span><br><span class="line">- waitForSelector(): 等到页面上出现匹配的元素。其实 waitFor()也有同样功能。</span><br><span class="line"></span><br><span class="line">- waitForFunction(): 等到函数完成并返回一个值</span><br><span class="line"></span><br><span class="line">- coroutine waitForXPath(): 等到 xpath 页面上出现匹配的元素</span><br><span class="line"></span><br><span class="line">- workers: 获取页面的所有 worker。至于是什么，我不知道</span><br><span class="line"></span><br><span class="line">- coroutine xpath(): ..</span><br><span class="line"></span><br><span class="line">## worker 类</span><br><span class="line"></span><br><span class="line">page.on(&#39;workercreated&#39;, 函数) 这个函数传入的参数就是 worker 类</span><br><span class="line"></span><br><span class="line">- coroutine evaluate(): 同上</span><br><span class="line">- coroutine evaluateHandle():同上</span><br><span class="line">- coroutine executionContext():同上</span><br><span class="line">- url: 同上</span><br><span class="line"></span><br><span class="line">## 键盘类</span><br><span class="line"></span><br><span class="line">- coroutine down(): 如果没有参数，则是按下鼠标左键。如果是键盘的某个值比如 shift、A 等键，则是相当于按下这些键。</span><br><span class="line">- coroutine press(): 同 down()，但是上面是不会释放鼠标或者键盘，需要调用 up 方法释放鼠标。</span><br><span class="line">- coroutine sendCharacter：将字符发送到页面。没用过</span><br><span class="line">- coroutine type(): 同上</span><br><span class="line">- coroutine up(): 释放由 down 按下的键或者鼠标</span><br><span class="line"></span><br><span class="line">## 鼠标类</span><br><span class="line"></span><br><span class="line">- coroutine click(): 按下(x, y)处的按钮</span><br><span class="line">   参数：</span><br><span class="line">  - &#96;button&#96;（STR）： ，left（左键）、right（右键）或 middle（中键），默认为 &#96;left&#96;。</span><br><span class="line">  - &#96;clickCount&#96; （int）：默认为 1。</span><br><span class="line">  - &#96;delay&#96;（int | float）：等待时间 &#96;mousedown&#96; 和 &#96;mouseup&#96; 以毫秒为单位的时间。默认为 0。</span><br><span class="line">- coroutine down(): 同上</span><br><span class="line">- coroutine move(): 移动鼠标光标。</span><br><span class="line">- coroutine up()： 同上</span><br><span class="line"></span><br><span class="line">## tracing 类</span><br><span class="line"></span><br><span class="line">创建可在 Chrome DevTools 或时间线查看器打开的跟踪文件 ，使用如下</span><br></pre></td></tr></table></figure></code></pre><p>await page.tracing.start({‘path’: ‘trace.json’})</p>
+<p>await page.goto(‘<a href="https://www.google.com&#39;" target="_blank" rel="noopener">https://www.google.com&#39;</a>)</p>
+<p>await page.tracing.stop()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- coroutine start(): 开始跟踪</span><br><span class="line">- coroutine stop(): 停止跟踪</span><br><span class="line"></span><br><span class="line">不好用，可能是我不知道用</span><br><span class="line"></span><br><span class="line">## Dialog 类</span><br><span class="line"></span><br><span class="line">&#96;page.on( &#39;dialog&#39;, 函数)&#96;，函数的参数就是这个类</span><br><span class="line"></span><br><span class="line">- coroutine accept(): 接受对话框</span><br><span class="line">- defaultValue： 如果对话框提示，则获取默认提示值</span><br><span class="line">- coroutine dismiss(): 关闭对话框</span><br><span class="line">- message: 获取对话框消息</span><br><span class="line">- type： 获取对话框类型。类型有：&#96;alert&#96;，&#96;beforeunload&#96;，&#96;confirm&#96;，或 &#96;prompt&#96;</span><br><span class="line"></span><br><span class="line">## frame 类</span><br><span class="line"></span><br><span class="line">- coroutine J():同上</span><br><span class="line">- coroutine JJ():同上</span><br><span class="line">- coroutine JJeval(): 同上</span><br><span class="line">- coroutine Jeval(): 同上</span><br><span class="line">- coroutine Jx(): 同上</span><br><span class="line">- coroutine addScriptTag(): 同上</span><br><span class="line">- coroutine addStyleTag(): 同上</span><br><span class="line">- childFrames: 获取子框架</span><br><span class="line">- coroutine click(): 同上</span><br><span class="line">- coroutine content(): 同上</span><br><span class="line">- coroutine evaluate(): 同上</span><br><span class="line">- coroutine evaluateHandle(): 同上</span><br><span class="line">- coroutine executionContext(): 同上</span><br><span class="line">- coroutine focus(): 同上</span><br><span class="line">- coroutine hover(): 同上</span><br><span class="line">- isDetached()： 如果此框架已分离，则返回 True</span><br><span class="line">- name：获取 frame 的名称，如果没有则返回 ID</span><br><span class="line">- parentFrame：获取父框架</span><br><span class="line">   后面这些属性和 page 类一模一样</span><br><span class="line"></span><br><span class="line">## ElementHandle 类</span><br><span class="line"></span><br><span class="line">- coroutine J()</span><br><span class="line">- coroutine JJ()</span><br><span class="line">- coroutine JJeval()</span><br><span class="line">- coroutine Jeval()</span><br><span class="line">- asElement</span><br><span class="line">- coroutine boundingBox(): 返回此元素的边界框,如果元素不可见，则返回 None</span><br><span class="line">- coroutine boxModel():返回元素框</span><br><span class="line">- coroutine click()</span><br><span class="line">- coroutine contentFrame(): 返回元素句柄的 frame</span><br><span class="line">- coroutine focus()</span><br><span class="line">- coroutine hover()</span><br><span class="line">- coroutine isIntersectingViewport(): 如果元素在视口中可见，则返回 True</span><br><span class="line">- coroutine press()</span><br><span class="line">- coroutine screenshot()</span><br><span class="line">- coroutine tap()</span><br><span class="line">- coroutine type()</span><br><span class="line">- coroutine uploadFile(): 上传文件</span><br><span class="line"></span><br><span class="line">## request 类</span><br><span class="line"></span><br><span class="line">page.on(&#39;request&#39;, 函数) 这个函数传入的参数就是 request 类</span><br><span class="line"></span><br><span class="line">- coroutine abort(): 中断请求</span><br><span class="line"></span><br><span class="line">- coroutine continue_(): 使用可选的请求覆盖继续请求</span><br><span class="line"></span><br><span class="line">   参数：   </span><br><span class="line"></span><br><span class="line">  - &#96;url&#96; （str）：如果设置，请求 URL 将被更改。</span><br><span class="line">  - &#96;method&#96;（str）：如果设置，则更改请求方法（例如 &#96;GET&#96;）。</span><br><span class="line">  - &#96;postData&#96; （str）：如果设置，则更改发布数据或请求。</span><br><span class="line">  - &#96;headers&#96; （dict）：如果设置，则更改请求 HTTP 标头</span><br><span class="line"></span><br><span class="line">- failure(): 返回错误文本</span><br><span class="line"></span><br><span class="line">- frame : 返回匹配的 frame 对象</span><br><span class="line"></span><br><span class="line">- headers: 返回此请求的 HTTP 标头字典</span><br><span class="line"></span><br><span class="line">- isNavigationRequest(): ？？</span><br><span class="line"></span><br><span class="line">- method：返回此请求的方法</span><br><span class="line"></span><br><span class="line">- postData： 返回此请求的帖子正文</span><br><span class="line"></span><br><span class="line">- redirectChain： request 类重定向的所有请求</span><br><span class="line"></span><br><span class="line">- resourceType：渲染引擎感知的此请求的资源类型</span><br><span class="line"></span><br><span class="line">- coroutine respond(): 通过给定的参数修改请求</span><br><span class="line"></span><br><span class="line">   参数：   </span><br><span class="line"></span><br><span class="line">  - &#96;status&#96; （int）：响应状态代码，默认为 200。</span><br><span class="line">  - &#96;headers&#96; （dict）：可选的响应头。</span><br><span class="line">  - &#96;contentType&#96;（str）：如果设置，则等于设置 &#96;Content-Type&#96; 响应头。</span><br><span class="line">  - &#96;body&#96; （str | bytes）：可选的响应主体。</span><br><span class="line"></span><br><span class="line">- response(): 返回匹配的 response 对象</span><br><span class="line"></span><br><span class="line">- url： 此请求的 URL</span><br><span class="line"></span><br><span class="line">## response 类</span><br><span class="line"></span><br><span class="line">- buffer(): 返回相应的字节内容</span><br><span class="line">- fromCache： 如果响应是从缓存提供的，则返回 True。缓存可能是浏览器的磁盘缓存或者内存，而不是服务器响应的</span><br><span class="line">- fromServiceWorker： 如果响应由服务器提供，则返回 True</span><br><span class="line">- headers： 返回此响应的 HTTP 标头字典</span><br><span class="line">- coroutine json(): 获取响应正文的 JSON</span><br><span class="line">- ok： 返回 bool 此请求是否成功</span><br><span class="line">- request： 获取匹配的 request 对象</span><br><span class="line">- securityDetails： 返回与此响应关联的安全详细信息</span><br><span class="line">- status： 响应的状态代码</span><br><span class="line">- coroutine text(): 获取响应正文的文本</span><br><span class="line">- url : 响应的 URL</span><br><span class="line"></span><br><span class="line">## target 类</span><br><span class="line"></span><br><span class="line">我到现在还没明白这是干什么的</span><br><span class="line"></span><br><span class="line">- browser： 获取目标所属的浏览器</span><br><span class="line">- browserContext： 返回目标所属的浏览器上下文</span><br><span class="line">- coroutine createCDPSession(): 创建附加到目标的 Chrome Devtools 协议会话</span><br><span class="line">- opener: 获取打开此目标的目标</span><br><span class="line">- coroutine page(): 获取此目标的页面</span><br><span class="line">- type: 获取此目标的类型</span><br><span class="line">- url: 获取此目标的网址</span><br><span class="line"></span><br><span class="line">## CDPSession 类</span><br><span class="line"></span><br><span class="line">- coroutine detach(): 从目标分离会话</span><br><span class="line">- send() :</span><br><span class="line"></span><br><span class="line">## Debugging</span><br><span class="line"></span><br><span class="line">对于调试，您可以设置 for 和 功能 &#96;logLevel&#96; 选项。但是，此选项会打印太多日志，包括 pyppeteer 的 SEND &#x2F; RECV 消息。为了只显示被抑制的错误消息，您应该设置 logging.DEBUG 为 True</span><br></pre></td></tr></table></figure>
+<p>import asyncio<br>import pyppeteer<br>from pyppeteer import launch</p>
+<p>pyppeteer.DEBUG = True  # print suppressed errors as error log</p>
+<p>async def main():</p>
+<pre><code>browser = await launch()
+
+...  # do something</code></pre><p>asyncio.get_event_loop().run_until_complete(main())</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 实践</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;python</span><br><span class="line">import asyncio</span><br><span class="line">from asyncio.tasks import wait</span><br><span class="line">from logging import lastResort</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">from pyquery import PyQuery as pq</span><br><span class="line"></span><br><span class="line"># 第一步 去除浏览器自动化参数</span><br><span class="line"># 必须在 from pyppeteer import launch 前去除参数</span><br><span class="line"># 去除自动化 启动参数</span><br><span class="line"># from pyppeteer import launcher</span><br><span class="line"># launcher.AUTOMATION_ARGS.remove(&quot;--enable-automation&quot;)</span><br><span class="line">from pyppeteer import launch</span><br><span class="line"></span><br><span class="line">browser &#x3D; None</span><br><span class="line">launch_kwargs &#x3D; &#123;</span><br><span class="line">    # 控制是否为无头模式</span><br><span class="line">    &quot;headless&quot;: False,</span><br><span class="line">    # chrome启动命令行参数</span><br><span class="line">    &quot;args&quot;: [</span><br><span class="line">        # 浏览器代理 配合某些中间人代理使用</span><br><span class="line">        # &quot;--proxy-server&#x3D;http:&#x2F;&#x2F;127.0.0.1:8008&quot;,</span><br><span class="line">        # 最大化窗口</span><br><span class="line">        &quot;--start-maximized&quot;,</span><br><span class="line">        # 取消沙盒模式 沙盒模式下权限太小</span><br><span class="line">        &quot;--no-sandbox&quot;,</span><br><span class="line">        # 不显示信息栏  比如 chrome正在受到自动测试软件的控制 ...</span><br><span class="line">        &quot;--disable-infobars&quot;,</span><br><span class="line">        # log等级设置 在某些不是那么完整的系统里 如果使用默认的日志等级 可能会出现一大堆的warning信息</span><br><span class="line">        &quot;--log-level&#x3D;3&quot;,</span><br><span class="line">        # 设置UA</span><br><span class="line">        &quot;--user-agent&#x3D;Mozilla&#x2F;5.0 (Windows NT 10.0; Win64; x64) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;71.0.3578.98 Safari&#x2F;537.36&quot;,</span><br><span class="line">    ],</span><br><span class="line">    &quot;dumpio&quot;: True,</span><br><span class="line">    # 当界面开多了时会卡住，设置这个参数就不会了</span><br><span class="line">    # 用户数据保存目录 这个最好也自己指定一个目录</span><br><span class="line">    # 如果不指定的话，chrome会自动新建一个临时目录使用，在浏览器退出的时候会自动删除临时目录</span><br><span class="line">    # 在删除的时候可能会删除失败（不知道为什么会出现权限问题，我用的windows） 导致浏览器退出失败</span><br><span class="line">    # 然后chrome进程就会一直没有退出 CPU就会狂飙到99%</span><br><span class="line">    &quot;userDataDir&quot;: &quot;.&#x2F;userdata&quot;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def screen_size():</span><br><span class="line">    &quot;&quot;&quot;使用tkinter获取屏幕大小&quot;&quot;&quot;</span><br><span class="line">    import tkinter</span><br><span class="line"></span><br><span class="line">    tk &#x3D; tkinter.Tk()</span><br><span class="line">    width &#x3D; tk.winfo_screenwidth()</span><br><span class="line">    height &#x3D; tk.winfo_screenheight()</span><br><span class="line">    tk.quit()</span><br><span class="line">    return width, height</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">async def main():</span><br><span class="line">    global browser</span><br><span class="line">    if browser is None:</span><br><span class="line">        browser &#x3D; await launch(launch_kwargs)</span><br><span class="line"></span><br><span class="line">    page &#x3D; await browser.newPage()</span><br><span class="line">    width, height &#x3D; screen_size()</span><br><span class="line">    # 设置网页可视区域大小</span><br><span class="line">    # await page.setViewport(&#123;</span><br><span class="line">    #     &quot;width&quot;: width,</span><br><span class="line">    #     &quot;height&quot;: height</span><br><span class="line">    # &#125;)</span><br><span class="line">    # 第二步，修改 navigator.webdriver检测</span><br><span class="line">    # 其实各种网站的检测js是不一样的，这是比较通用的。有的网站会检测运行的电脑运行系统，cpu核心数量，鼠标运行轨迹等等。</span><br><span class="line">    # 反爬js</span><br><span class="line">    # 隐藏浏览器驱动信息，防检测</span><br><span class="line">    await page.evaluateOnNewDocument(</span><br><span class="line">        &quot;Object.defineProperty(&quot; &#39;navigator, &quot;webdriver&quot;, &#123;get: () &#x3D;&gt; undefined&#125;)&#39;</span><br><span class="line">    )</span><br><span class="line">    js_text &#x3D; &quot;&quot;&quot;</span><br><span class="line">() &#x3D;&gt;&#123; </span><br><span class="line">    Object.defineProperties(navigator,&#123; webdriver:&#123; get: () &#x3D;&gt; false &#125; &#125;);</span><br><span class="line">    window.navigator.chrome &#x3D; &#123; runtime: &#123;&#125;,  &#125;;</span><br><span class="line">    Object.defineProperty(navigator, &#39;languages&#39;, &#123; get: () &#x3D;&gt; [&#39;en-US&#39;, &#39;en&#39;] &#125;);</span><br><span class="line">    Object.defineProperty(navigator, &#39;plugins&#39;, &#123; get: () &#x3D;&gt; [1, 2, 3, 4, 5,6], &#125;);</span><br><span class="line"> &#125;</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    await page.evaluateOnNewDocument(js_text)  # 本页刷新后值不变，自动执行js</span><br><span class="line"></span><br><span class="line">    await page.setUserAgent(</span><br><span class="line">        &quot;Mozilla&#x2F;5.0 (Windows NT 6.1; Win64; x64) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;70.0.3538.67 Safari&#x2F;537.36&quot;</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    await page.goto(&quot;http:&#x2F;&#x2F;sxdxjwc.ctgu.edu.cn&#x2F;index.jsp&quot;)</span><br><span class="line"></span><br><span class="line">    await page.screenshot(path&#x3D;&quot;example.png&quot;, quality&#x3D;100, fullPage&#x3D;True)</span><br><span class="line">    latest_notice &#x3D; await page.querySelector(&quot;div.jwtz_nr &gt; ul &gt; ul &gt; li:nth-child(1)&quot;)</span><br><span class="line">    url &#x3D; await (await latest_notice.getProperty(&quot;href&quot;)).jsonValue()</span><br><span class="line">    print(str(url))</span><br><span class="line">    print(page.url)</span><br><span class="line">    title &#x3D; await page.evaluate(&quot;(element) &#x3D;&gt; element.textContent&quot;, latest_notice)</span><br><span class="line">    print(title)</span><br><span class="line">    url &#x3D; await page.evaluate(&quot;(element) &#x3D;&gt; element.URL&quot;, latest_notice)</span><br><span class="line">    print(&quot;获取的链接&quot;, url)</span><br><span class="line">    await page.click(</span><br><span class="line">        &quot;body &gt; div.width &gt; div.maina &gt; div.jwtz &gt; div.jwtz_nr &gt; ul &gt; ul &gt; li:nth-child(1)&quot;</span><br><span class="line">    )</span><br><span class="line">    await asyncio.sleep(1)</span><br><span class="line">    # await page.waitForNavigation(timeout&#x3D;0)</span><br><span class="line">    # await asyncio.wait(</span><br><span class="line">    #     [</span><br><span class="line">    #         page.click(</span><br><span class="line">    #             &quot;body &gt; div.width &gt; div.maina &gt; div.jwtz &gt; div.jwtz_nr &gt; ul &gt; ul &gt; li:nth-child(1)&quot;</span><br><span class="line">    #         ),</span><br><span class="line">    #         page.waitForNavigation(&#123;&quot;timeout&quot;: 0&#125;),</span><br><span class="line">    #     ]</span><br><span class="line">    # )</span><br><span class="line"></span><br><span class="line">    pages &#x3D; await browser.pages()</span><br><span class="line">    print(&quot;所有的页面&quot;, pages)</span><br><span class="line">    for p in pages:</span><br><span class="line">        print(p.title,p.url)</span><br><span class="line">    # pages[0].close()</span><br><span class="line">    # await page.click(</span><br><span class="line">    #     &quot;body &gt; div.width &gt; div.maina &gt; div.jwtz &gt; div.jwtz_nr &gt; ul &gt; ul &gt; li:nth-child(1)&quot;</span><br><span class="line">    # )</span><br><span class="line">    # await page.waitFor(1)</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    # page.mouse  # 模拟真实点击</span><br><span class="line">    # time.sleep(10)</span><br><span class="line">    # page.bringToFront()</span><br><span class="line">    cookies &#x3D; await page.cookies()</span><br><span class="line">    print(cookies)</span><br><span class="line">    # 然后导入cookie</span><br><span class="line">    # await page.setCookie(*cookies)</span><br><span class="line">    # browser.retainLastPage()</span><br><span class="line">    # 前进</span><br><span class="line">    # await page.goForward()</span><br><span class="line">    # page&#x3D;pages[1]</span><br><span class="line">    await pages[-1].screenshot(path&#x3D;&quot;news.png&quot;, quality&#x3D;100, fullPage&#x3D;True)</span><br><span class="line">    # await page.waitFor(2)  # 停顿</span><br><span class="line">    await browser.close()</span><br><span class="line">asyncio.get_event_loop().run_until_complete(main())</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>转自：<a href="https://ld246.com/article/1566221786951" target="_blank" rel="noopener">https://ld246.com/article/1566221786951</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="https://ae01.alicdn.com/kf/HTB1AlvVXk9E3KVjSZFr7610UVXaw.png" alt="iBoy wechat" style="width: 150px; max-width: 100%;">
+  <div>欢迎您扫一扫上面的微信公众号，订阅我的博客！</div>
+</div>
+
+      
+        <div class="reward-container">
+  <div></div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="https://ae01.alicdn.com/kf/HTB1eKnGXkWE3KVjSZSy760ocXXah.png" alt="iBoy 支持作者">
+        <p>支持作者</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>iBoy
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.iboy.tech/post/63440.html" title="pyppeteer 手册">https://blog.iboy.tech/post/63440.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/post/61034.html" rel="next" title="TinyDB使用">
+                  <i class="fa fa-chevron-left"></i> TinyDB使用
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/post/53348.html" rel="prev" title="博客迁移">
+                  博客迁移 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments" id="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80NDI4OS8yMDgyMQ=="></div>
+  </div>
+  
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API-参考"><span class="nav-number">2.</span> <span class="nav-text">API 参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动器"><span class="nav-number">3.</span> <span class="nav-text">启动器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浏览器类"><span class="nav-number">4.</span> <span class="nav-text">浏览器类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#页面类"><span class="nav-number">5.</span> <span class="nav-text">页面类</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="iBoy"
+    src="https://ae01.alicdn.com/kf/HTB1pZi7XlCw3KVjSZFu763AOpXa0.png">
+  <p class="site-author-name" itemprop="name">iBoy</p>
+  <div class="site-description" itemprop="description">知道的越多，不知道的越多...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+      
+<!--音乐播放器-->
+
+           <div >
+              <iframe frameborder="no" style="margin-top:25px;" border="0" marginwidth="0" marginheight="0" width="210" height="110" src="//music.163.com/outchain/player?type=2&id=479850552&auto=0&height=66"></iframe>
+           </div>
+
+
+
+<!--标签云-->
+
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Celery/" rel="tag">Celery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding/" rel="tag">Coding</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask/" rel="tag">Flask</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-SoketIO/" rel="tag">Flask SoketIO</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-Redis/" rel="tag">Flask-Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-SQLAlchemy/" rel="tag">Flask-SQLAlchemy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Frp/" rel="tag">Frp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/" rel="tag">Git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/" rel="tag">GitHub</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDE/" rel="tag">IDE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Markdown/" rel="tag">Markdown</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Miniconda/" rel="tag">Miniconda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python-Web/" rel="tag">Python Web</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Trojan/" rel="tag">Trojan</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/" rel="tag">Unity</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VsCode/" rel="tag">VsCode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web/" rel="tag">Web</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebSocket/" rel="tag">WebSocket</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/" rel="tag">npm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipenv/" rel="tag">pipenv</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E5%B0%9A/" rel="tag">云尚</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%8F%E7%A8%8B/" rel="tag">协程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%A8%E7%BA%BF%E5%B7%A5%E5%85%B7/" rel="tag">在线工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8A%93%E5%8C%85/" rel="tag">抓包</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8E%A5%E7%A0%81%E5%B9%B3%E5%8F%B0/" rel="tag">接码平台</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%B6%E8%97%8F/" rel="tag">收藏</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86/" rel="tag">数据库原理</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9A%91%E6%9C%9F%E7%AD%94%E8%BE%A9/" rel="tag">暑期答辩</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" rel="tag">科学上网</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">iBoy</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">440k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:40</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.1.js"></script>
+
+<script src="/js/motion.js?v=7.4.1.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.1.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.1.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.1.js"></script>
+
+
+  <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three.min.js"></script>
+    <script defer src="/lib/three/three-waves.min.js"></script>
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+<script src="/js/local-search.js?v=7.4.1.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+</body>
+</html>

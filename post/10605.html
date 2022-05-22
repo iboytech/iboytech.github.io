@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#222">
+  <meta name="google-site-verification" content="kJUjgbvECplcwB4X3hhAHUuG5Bfr2JLsTpEMZ6fRR-o">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: true,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="第一章、操作系统概述一、为什么要区分系统态和用户态？​        防止操作系统和关键数据受到用户程序有意或无意的破坏，通常将处理机的执行状态分为系统态和用户态">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统重点">
+<meta property="og:url" content="https://blog.iboy.tech/post/10605.html">
+<meta property="og:site_name" content="一名不学无术的伪程序猿">
+<meta property="og:description" content="第一章、操作系统概述一、为什么要区分系统态和用户态？​        防止操作系统和关键数据受到用户程序有意或无意的破坏，通常将处理机的执行状态分为系统态和用户态">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2020/12/26/b7d318d5bb78a723a5bcec1a50e3fe62.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2020/12/26/ec947109ad461d3b4ea5e46f21f691a9.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2020/12/27/27e22ad5f118fcaead717aebdb4f8c6b.png">
+<meta property="article:published_time" content="2020-12-24T08:50:05.000Z">
+<meta property="article:modified_time" content="2022-05-20T09:05:57.928Z">
+<meta property="article:author" content="iBoy">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2020/12/26/b7d318d5bb78a723a5bcec1a50e3fe62.png">
+  <link rel="canonical" href="https://blog.iboy.tech/post/10605">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>操作系统重点 | 一名不学无术的伪程序猿</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一名不学无术的伪程序猿</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>日程表</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/iboy-tech" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.iboy.tech/post/10605.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://ae01.alicdn.com/kf/HTB1pZi7XlCw3KVjSZFu763AOpXa0.png">
+      <meta itemprop="name" content="iBoy">
+      <meta itemprop="description" content="知道的越多，不知道的越多...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一名不学无术的伪程序猿">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          操作系统重点
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-24 16:50:05" itemprop="dateCreated datePublished" datetime="2020-12-24T16:50:05+08:00">2020-12-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-20 17:05:57" itemprop="dateModified" datetime="2022-05-20T17:05:57+08:00">2022-05-20</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>10k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="第一章、操作系统概述"><a href="#第一章、操作系统概述" class="headerlink" title="第一章、操作系统概述"></a>第一章、操作系统概述</h2><p><strong>一、为什么要区分系统态和用户态？</strong></p><p>​        防止操作系统和关键数据受到用户程序有意或无意的破坏，通常将处理机的执行状态分为系统态和用户态</p><a id="more"></a>
+
+<ol>
+<li><p>​    用户态下操作受到限制不能执行特权指令，防止操作系统或其他程序收到破坏，用户态的程序通过系统调用</p>
+<p>接受系统态下的运行的服务</p>
+</li>
+<li><p>用户态下的程序只能存取自己的指令和数据，不能存取其他程序和操作系统的指令和数据</p>
+<p>但是系统态下的进程可以存取操作系统和用户进行的数据，可以执行一切指令</p>
+</li>
+</ol>
+<p><strong>二、多道程序设计的意义？</strong></p>
+<ol>
+<li><p>提高系统资源利用率和吞吐率。当程序需要等待某种事情的发生时，操作系统不用空闲等待，可以执行其他程序、这样CPU和外设可以并行操作</p>
+</li>
+<li><p>客观世界本身就是一个多道，客观世界有些问题想要快速解决，需要多道系统的出现</p>
+<hr>
+</li>
+</ol>
+<p><strong>三、客户机和服务器模型常用语网络和分布式系统，是否可用于单机系统？</strong></p>
+<p>​        客户机/服务器模型是通用模型，广义上讲，提供服务的叫服务器，请求服务的叫客户机，在客户机/服务器模型中的，文件服务，进程服务都是以服务器进程的形式运行与用户态，用户进程通过向服务器请求或得服务，所以客户机/服务器模型即可用于网络和分布式系统，也可用户单机系统</p>
+<p><strong>四、系统调用和一般的函数调用的区别？</strong></p>
+<p>​    系统调用执行的程序在操作系统中的系统态下执行，一般的函数调用由用户准备在用户态下执行</p>
+<p><strong>五、过程调用和系统调用的相同点是什么？它们与中断调用的差别是什么？</strong></p>
+<ol>
+<li><p>过程调用和系统调用的执行是完全同步的，在相同的数据集上重复执行，都需要保存现场信息转而执行其他的程序，执行后返回。</p>
+</li>
+<li><p>中断调用的执行是异步的，在相同的数据集上重复执行，中断的发生点可以是不同刘的。</p>
+</li>
+</ol>
+<p><strong>六、一般计算机的启动过程？</strong></p>
+<ol>
+<li><p>由ROM程序对硬件进行检测</p>
+</li>
+<li><p>ROM中的启动程序将磁盘引导块读入内存</p>
+</li>
+<li><p>引导块将OS内核调入内存</p>
+</li>
+<li><p>执行OS内核程序进行初始化</p>
+</li>
+<li><p>加载外核处理程序，给出提示，等待用户操作</p>
+</li>
+</ol>
+<p><strong>七、多道程序如何实现CPU计算和IO操作并行？</strong></p>
+<p>​        多道程序系统中CPU无需直接控制IO操作的完成，而是通过通道，DMA，和中断机构控制IO完成，CPU不是空闲等待IO操作的完成，而是转而执行其他应用程序</p>
+<p><strong>八、为什么相同的硬件条件下，一个应用程序可以在DOS和Windows下运行却不能在UNIX下运行？</strong></p>
+<p>​        虽然硬件是相同的，但是应用程序的运行需要OS的支持，Windows是兼容DOS的，所以在DOS下运行的应用程序也能在OS下面运行，但是DOS，Windows和UNIX在系统结构,用户接口,API等方面是不兼容的，比如应用用到了windows下的系统调用的API，但是UNIX下没有，程序就无法运行。</p>
+<p><strong>九、为什么中断机构对多道操作系统来说是比不可少的？</strong></p>
+<p>​    操作系统的进程切换很多时候都是通过中断来完成的，如时钟中断，特别是在分时系统中，系统调用通过软中断来实现，通道和外设的操作也需要向操作系统发送中断。</p>
+<p><strong>十、网络操作系统和分布式操作系统的区别？</strong></p>
+<p>​        1、网络操作系统用户使用自己的机器可以通过网络访问其他机器的资源，通过网络将很多的机器连接起来共享硬件资源，但整个系统对用户来说是分散的，不透明的</p>
+<p>​        2、分布式OS也是通过网络将整个系统连接起来，但是整个系统对用户来说是透明的，用户使用分布式OS就像在使用自己的电脑</p>
+<p><strong>十一、将手工操作，单道批处理，多道批处理，多用户分时系统按照CPU利用率从小到大排序</strong></p>
+<p>手工&lt;单道批处理系统&lt;多用户分时系统&lt;多道批处理系统</p>
+<hr>
+<h2 id="第二章、进程和线程的管理"><a href="#第二章、进程和线程的管理" class="headerlink" title="第二章、进程和线程的管理"></a>第二章、进程和线程的管理</h2><p><strong>一、举例说明多道程序系统时区封闭性和再现性</strong></p>
+<p>有两个循环程序，共享一个变量N，</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Pa&#123;</span><br><span class="line">	repeat</span><br><span class="line">		N:=N+<span class="number">1</span>;</span><br><span class="line">	until <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Pb&#123;</span><br><span class="line">	repeat</span><br><span class="line">		print(N);</span><br><span class="line">		N=<span class="number">0</span>;</span><br><span class="line">	until <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>某时刻N的初值为n,可能出现以下三种情况</p>
+<p>​        1、在在print(N)和N:=0之前，n的变化过程为：n+1,n+1,0</p>
+<p>​        2、在print(N)和N:=0中间，n的变化过程是：n,n+1,0</p>
+<p>​        3、在print(N)和N:=0之后，n的变化过程是：n,0,n+1</p>
+<p><strong>二、进程的挂起状态、阻塞状态、以及就绪状态的区别？</strong></p>
+<p>​    共同点是它们都没有占用CPU</p>
+<p>​    不同点是挂起的进程处于禁止状态，在解除挂起之前不会参与对资源的竞争，也没有机会占用CPU</p>
+<p>​    阻塞状态和就绪状态的进程都处于活动状态，都有活动处理机的机会，都可能有新的资源要求</p>
+<p><strong>三、、在多道程序系统中，当需要等待某种事情发生时，系统将处于何种状态？</strong></p>
+<p>​            这取决于进程程序的处理方式</p>
+<p>​            1、调用阻塞原语，阻塞自己、让出CPU资源</p>
+<p>​            2、进行忙等，不放弃CPU</p>
+<p>​            当等待某种事件发生时，不一定要进入阻塞状态</p>
+<p><strong>四、用户线程和内核支持线程有何区别？</strong></p>
+<p>​    1、用户级线程是OS不可感知的，内核支持级线程是OS可感知的</p>
+<p>​    2、用户 级线程的创建、撤销和调度不需要OS内核支持，是在语言这一级处理的，而内核支持级线程的创建、撤销、调度都需要OS内核的支持，与进程的创建撤销和调度是大致相同的</p>
+<p>​    3、用户级线程执行系统调用指令时会导致其所属进程被中断，内核支持线程执行系统调用指令时只会导致改线程被中断</p>
+<p>​    4、在只有用户级线程的系统内，CPU调度是以进程为单位，一个进程所对应的多个线程由用户程序切换运行，而在内核支持系统，CPU的调度以线程为单位，通过OS的线程调度程序负责调度</p>
+<p>​    5、用户级线程支持的程序实体是运行在用户态下面的程序，内核支持用户程序实体可以运行在任何状态下</p>
+<h2 id="第三章、进程的同步与通信"><a href="#第三章、进程的同步与通信" class="headerlink" title="第三章、进程的同步与通信"></a>第三章、进程的同步与通信</h2><p><strong>一、多个进程对信号量S进行了5次 P操作，2次V操作后，现在信号量的值是 -3，与信号量S相关的处于阻塞状态的进程有几个？信号量的初值是多少？</strong> </p>
+<ol>
+<li><p>处于阻塞状态的进程有3个</p>
+</li>
+<li><p>初值为-3+5-2=0</p>
+</li>
+</ol>
+<p><strong>二、设公共汽车上，司机和售票员的活动分别为：司机的活动为启动车辆，正常行车，到站停车；售票员的活动为关车门，售票，开车门。试问：</strong></p>
+<p>(1)  在汽车不断地到站、停车、行驶过程中，司机和售票员的活动是同步关系还是互斥关系？</p>
+<p>​    司机的活动：开车、停车</p>
+<p>​    售票员的活动：关车门、售票、开车门</p>
+<p>​    司机停车、售票员开门、乘客下车、售票员关门、司机开车、售票员售票</p>
+<p>​     司机和售票员的活动是同步关系</p>
+<p>(2)  用信号量和P、V操作实现他们间的协调操作。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;司机进程&gt;&#123;</span><br><span class="line">    repeat</span><br><span class="line">      车门是否关闭?没关则等待</span><br><span class="line">      启动车辆</span><br><span class="line">      正常行车</span><br><span class="line">      到站停车</span><br><span class="line">      设置车辆已停标志</span><br><span class="line">    until <span class="literal">false</span> </span><br><span class="line">&#125;</span><br><span class="line">&lt;售票员进程&gt;&#123;</span><br><span class="line">    repeat</span><br><span class="line">        关车门</span><br><span class="line">        设置车门已关标志</span><br><span class="line">        售票</span><br><span class="line">        车辆是否到站？没到站则等待</span><br><span class="line">        开车门</span><br><span class="line">        乘客上下车</span><br><span class="line">    until <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>设置两个信号量</p>
+<p>S1车门是否关闭 0</p>
+<p>S2车辆是否停车 1</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;司机进程&gt;&#123;</span><br><span class="line">    repeat</span><br><span class="line">        P(S1);</span><br><span class="line">        车辆启动;</span><br><span class="line">        正常行车;</span><br><span class="line">        到站停车;</span><br><span class="line">        V(S2);</span><br><span class="line">     until <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line">&lt;司机进程&gt;&#123;</span><br><span class="line">    repeat</span><br><span class="line">        V(S1);</span><br><span class="line">        售票;</span><br><span class="line">        P(S2);</span><br><span class="line">        开车门;</span><br><span class="line">        乘客上下车;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>三、说明管程中条件变量的含义和作用？</strong></p>
+<p>管程中的条件变量是调用管程过程的进程用来执行Wait和Signal操作来挂起或解挂的变量</p>
+<p>信号量与管程的条件变量的对比：</p>
+<ol>
+<li><p>信号量要赋初值，而条件变量不用，它只是一个队首指针</p>
+</li>
+<li><p>在信号量执行P操作不一定会被阻塞，在条件变量上执行Wait()操作会被挂起</p>
+</li>
+<li><p>在信号量上执行S操作，信号量的值加1，若加1后的值仍小于0，则会唤醒等待的进程，但唤醒者自身不受影响</p>
+<p>但是在条件变量上执行Signal()操作则有两种选择，1、P等待，Q离开或等待另一条件发生，2、Q等待，P离开或等待另一条件发生，P和Q是两个进程</p>
+</li>
+</ol>
+<p><strong>四、如下图所示，有多个PUT操作同时向BUFF1放数据，有一个MOVE操作不断地将BUFF1的数据移到Buff2，有多个GET操作不断地从Buff2中将数据取走。BUFF1的容量为m，BUFF2的容量是n, PUT、 MOVE、 GET每次操作一个数据，在操作的过程中要保证数据不丢失。试用Ｐ、Ｖ原语协调PUT、 MOVE的操作，并说明每个信号量的含义和初值。</strong></p>
+<p>多生产者消费者问题</p>
+<p><img src="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2020/12/26/b7d318d5bb78a723a5bcec1a50e3fe62.png" alt="image-20201226142330701"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">buff1 m</span><br><span class="line">buff2 n</span><br><span class="line">put into buff1</span><br><span class="line">move from buff1 to buff2</span><br><span class="line">get from buff2、</span><br><span class="line">多个PUT</span><br><span class="line">&lt;PUT&gt;&#123;</span><br><span class="line">    repeat</span><br><span class="line">        buff1是否有空间?没有则等待</span><br><span class="line">        buff1是否可操作</span><br><span class="line">        PUT</span><br><span class="line">        设置buff1可操作标志</span><br><span class="line">        设置buff1有数据标志</span><br><span class="line">    until <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line">一个MOVE</span><br><span class="line">&lt;MOVE&gt;&#123;</span><br><span class="line">    repeat</span><br><span class="line">        buffer1是否有数据，没有则等待</span><br><span class="line">        buff2是否有空间，没有则等待</span><br><span class="line">        buff1是否可操作</span><br><span class="line">        buff2是否可操作</span><br><span class="line">        MOVE</span><br><span class="line">        设置buff1可操作标志</span><br><span class="line">        设置buff2可操作标志</span><br><span class="line">        设置buff1有空间标志</span><br><span class="line">        设置buff2有数据标志</span><br><span class="line">    until <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line">多个GET</span><br><span class="line">&lt;GET&gt;&#123;</span><br><span class="line">    repeat</span><br><span class="line">        buff2是否有数据？没有则等待</span><br><span class="line">        buff2是否可操作</span><br><span class="line">        GET</span><br><span class="line">        设置buff2可操作标志</span><br><span class="line">        设置buff2有空间标志</span><br><span class="line">    until <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>五、某高校计算机系开设网络课并安排上机实习，假设机房共有2m台机器，有2n名学生选该课，规定：</strong></p>
+<p>​        <strong>(1) 每两个学生组成一组，各占一台机器，协同完成上机实习；</strong></p>
+<p>​        <strong>(2) 只有凑够两个学生，并且此时机房有空闲机器，门卫才允许该组学生进入机房；</strong></p>
+<p>​        <strong>(3) 上机实习由一名教师检查，检查完毕，一组学生才可以离开机房。</strong></p>
+<p>​        <strong>试用P、V操作模拟上机实习过程。</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">&lt;门卫&gt;&#123;</span><br><span class="line">    repeat</span><br><span class="line">        学生<span class="number">1</span>是否到达？没有则等待</span><br><span class="line">        学生<span class="number">2</span>是否到达？没有则等待</span><br><span class="line">        是否有空闲计算机<span class="number">1</span>？没有则等待</span><br><span class="line">        是否有空闲计算机<span class="number">2</span>？没有则等待</span><br><span class="line">        分配计算机</span><br><span class="line">        设置学生<span class="number">1</span>可进入标志</span><br><span class="line">        设置学生<span class="number">2</span>可进入标志</span><br><span class="line">    until <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line">&lt;学生&gt;&#123;</span><br><span class="line">	   设置有学生到达标志</span><br><span class="line">       学生是否可进入？</span><br><span class="line">       上机实习</span><br><span class="line">       设置实习完成标志 </span><br><span class="line">       老师是否可检查？不能则等待</span><br><span class="line">       离开机房</span><br><span class="line">&#125;</span><br><span class="line">&lt;教师&gt;&#123;</span><br><span class="line">     repeat</span><br><span class="line">         是否有学生<span class="number">1</span>完成实习？没有则等待</span><br><span class="line">         是否有学生<span class="number">2</span>完成实习？没有则等待</span><br><span class="line">         检查实习</span><br><span class="line">         设置学生<span class="number">1</span>完成实习的标志</span><br><span class="line">         设置学生<span class="number">2</span>完成实习的标志</span><br><span class="line">     until <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line">computer <span class="number">2</span>m	<span class="number">2</span>m</span><br><span class="line">student <span class="number">2</span>n	<span class="number">0</span>  到达的学生	<span class="number">0</span></span><br><span class="line">finish：是否有学生完成实习	<span class="number">0</span></span><br><span class="line">enter：学生是否可以进入	 <span class="number">0</span></span><br><span class="line">test：老师是否检查完一组学生 <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">&lt;门卫&gt;&#123;</span><br><span class="line">    repeat</span><br><span class="line">		P(student);</span><br><span class="line">    	P(student);</span><br><span class="line">    	P(computer);</span><br><span class="line">    	P(computer);</span><br><span class="line">    	V(enter);</span><br><span class="line">    until <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line">&lt;学生&gt;&#123;</span><br><span class="line">    V(studnet);</span><br><span class="line">    P(enter);</span><br><span class="line">    上机</span><br><span class="line">    V(finish)</span><br><span class="line">    P(test(i))</span><br><span class="line">    V(computer)</span><br><span class="line">&#125;</span><br><span class="line">&lt;教师&gt;&#123;</span><br><span class="line">    repeat</span><br><span class="line">        P(finish)<span class="comment">/**是否有需要检查的学生，等待实习完成**/</span></span><br><span class="line">        P(finish)<span class="comment">/**是否有需要检查的学生，等待实习完成**/</span></span><br><span class="line">        选出可检查的第i组学生</span><br><span class="line">        检查第i组学生的实习成果</span><br><span class="line">        V(test(i))</span><br><span class="line">        V(test(i))</span><br><span class="line">    until <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="第四章、调度与死锁"><a href="#第四章、调度与死锁" class="headerlink" title="第四章、调度与死锁"></a>第四章、调度与死锁</h2><p><strong>一、有三个作业A（到达时间8:50，执行时间1.5小时）、B（到达时间9:00，执行时间0.4小时）、C（到达时间9:30，执行时间1小时）。当作业全部到达后，单道批处理系统按照响应比高者优先算法进行调度，则作业被选中的次序是？</strong></p>
+<p>响应比 = 1+(等待时间/执行长度)</p>
+<p>作业全部到达后，操作系统才开始调度</p>
+<table>
+<thead>
+<tr>
+<th>进程</th>
+<th>到达时间</th>
+<th>开始时间</th>
+<th>运行长度</th>
+<th>结束时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>8:50</td>
+<td>9:54</td>
+<td>1.5</td>
+<td>11:44</td>
+</tr>
+<tr>
+<td>B</td>
+<td>9:00</td>
+<td>9:30</td>
+<td>0.4</td>
+<td>9:54</td>
+</tr>
+<tr>
+<td>C</td>
+<td>9:30</td>
+<td>11:44</td>
+<td>1</td>
+<td>12:44</td>
+</tr>
+</tbody></table>
+<p>各个作业的等待时间为：开始调度的时间-到达的时间</p>
+<p>A：0.67</p>
+<p>B：0.5</p>
+<p>C：0</p>
+<p>各个进程的响应比为</p>
+<p>响应比 = （等待时间+要求服务时间）/ 要求服务时间</p>
+<p>当任务全部到达时，系统开始调度，此时A的等待时间</p>
+<p>​    A：1+0.67/1.5 =1.44</p>
+<p>​    B：1+0.5/0.4 = 2.25</p>
+<p>​    C：1+0/1 = 1</p>
+<p>​    选择B进行运行</p>
+<p>当B完成后，时间为9:54,A的等待时间64min,C的等待时间为24m</p>
+<p>​    A=1+64/90=1.71</p>
+<p>​    C=1+24/60=1.4</p>
+<p>选A运行，最后再运行C</p>
+<p><strong>二、 有三个进程P1、P2和P3并发工作。进程P1需要资源S3和S1；进程P2需用资源S1和S2；进程P3需用资源S2和S3，回答：</strong></p>
+<p><strong>（1）若对资源分配不加限制，会发生什么情况？为什么？</strong></p>
+<p>​        可能发生死锁，P1持有S1,P2持有S2，P3持有S3，的同时，再同时申请其他资源，会形成循环等待</p>
+<p><strong>（2）为保证进程正确地工作，应采用怎样的资源分配策略？为什么？</strong></p>
+<ol>
+<li>采用静态资源分配，在进程运行前分配给其所需的全部资源</li>
+<li>资源按序分配，避免出现循环等待的现象</li>
+<li>采用银行家算法再分配资源之前进行检测</li>
+</ol>
+<p><strong>三、有5个任务A，B，C，D，E，它们几乎同时到达，预计它们的运行时间为10，6，2，4，8min。其优先级分别为3，5，2，1和4，这里5为最高优先级。对于下列每一种调度算法，计算其平均进程周转时间（进程切换开销可不考虑）。</strong></p>
+<p><strong>(1) 先来先服务（按A，B，C，D，E）算法。</strong></p>
+<p>从提交到完成所用的时间</p>
+<table>
+<thead>
+<tr>
+<th>执行顺序</th>
+<th>运行时间</th>
+<th>优先级</th>
+<th>等待时间</th>
+<th>周转时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>10</td>
+<td>3</td>
+<td>0</td>
+<td>10</td>
+</tr>
+<tr>
+<td>B</td>
+<td>6</td>
+<td>5</td>
+<td>10</td>
+<td>16</td>
+</tr>
+<tr>
+<td>C</td>
+<td>2</td>
+<td>2</td>
+<td>16</td>
+<td>18</td>
+</tr>
+<tr>
+<td>D</td>
+<td>4</td>
+<td>1</td>
+<td>18</td>
+<td>22</td>
+</tr>
+<tr>
+<td>E</td>
+<td>8</td>
+<td>4</td>
+<td>22</td>
+<td>30</td>
+</tr>
+</tbody></table>
+<p>平均周转时间(10+16+18+22+30)/5=19.2min</p>
+<p><strong>(2) 优先级调度算法。</strong></p>
+<table>
+<thead>
+<tr>
+<th>执行顺序</th>
+<th>运行时间</th>
+<th>优先级</th>
+<th>等待时间</th>
+<th>周转时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>B</td>
+<td>6</td>
+<td>5</td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr>
+<td>E</td>
+<td>8</td>
+<td>4</td>
+<td>6</td>
+<td>14</td>
+</tr>
+<tr>
+<td>A</td>
+<td>10</td>
+<td>3</td>
+<td>14</td>
+<td>24</td>
+</tr>
+<tr>
+<td>C</td>
+<td>2</td>
+<td>2</td>
+<td>24</td>
+<td>26</td>
+</tr>
+<tr>
+<td>D</td>
+<td>4</td>
+<td>1</td>
+<td>26</td>
+<td>30</td>
+</tr>
+</tbody></table>
+<p>平均周转时间(6+14+24+26+30)/5=20</p>
+<p><strong>(3) 时间片轮转算法。如果系统采用时间片轮转（RR）算法，令时间片为2分钟，5个任务轮流执行的情况为：</strong></p>
+<p>第一轮：A B C D E</p>
+<p>第二轮：A  B  D  E</p>
+<p>第三轮：A  B   E</p>
+<p>第四轮：A  E</p>
+<p>第五轮：A</p>
+<p>平均周转时间为（15+11+3+8+14）*2/5 = 20.4 min</p>
+<p><strong>四、考虑由n个进程共享的具有m个同类资源的系统，证明：如果对i=1，2，…，n进程，有Need&gt;0而且所有最大需求量之和小于m+n,那么该系统是死锁无关的。</strong></p>
+<p>设每个进程的最大需求量为x，最差的情况下，每个进程占有（x-1）个资源，各自最多再申请一个资源就能完成运行，进而释放它们所占有的资源</p>
+<p>此时系统剩余资源为 m-n(x-1),当m-n(x-1)&gt;=1，即n*x&lt;=(m+n-1),也就是当最大资源需求量之和小于(m+n)，那么该系统是死锁无关的</p>
+<p><strong>五、 设系统中有三种类型的资源（A、B、C）和五个进程（P1、P2、P3、P4、P5），A资源的数量为17，B资源的数量为5，C资源的数量为20。在T0时刻系统状态如表1和表2所示。系统采用银行家算法实施死锁避免策略。</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2020/12/26/ec947109ad461d3b4ea5e46f21f691a9.png" alt="image-20201226194901090"></p>
+<p><strong>(1)  T0时刻是否为安全状态？若是，请给出安全序列。</strong></p>
+<p>​        P1（3，4，7）</p>
+<p>​        P2（1，3，4）</p>
+<p>​        P3（0，0，6）</p>
+<p>​        P4（2，2，1）</p>
+<p>​        P5（1，1，0）</p>
+<p>​        在T0时刻，存在一个安全序列（P4，P5，P3，P2，P1），所以系统是安全的</p>
+<p><strong>(2)  在T0时刻若进程P2请求资源（0，3，4），是否能实施资源分配？为什么？</strong></p>
+<p>​        不能实施分配，因为系统的可用资源不足，所以只能推迟分配</p>
+<p><strong>(3)  在②的基础上，若进程P4请求资源（2，0，1），是否能实施资源分配？为什么？</strong></p>
+<p>​        可以，此时系统仍能找到一个安全序列（P4，P1，P3，P5，P2）</p>
+<p><strong>(4)  在③的基础上，若进程P1请求资源（0，2，0），是否能实施资源分配？为什么？</strong></p>
+<p>​        可以实施资源分配</p>
+<h2 id="第五章、存储器管理"><a href="#第五章、存储器管理" class="headerlink" title="第五章、存储器管理"></a>第五章、存储器管理</h2><p><strong>一、动态重定位的特点有哪些？</strong></p>
+<ol>
+<li><p>动态重定位的实现主要依靠硬件地址变换机构，并且存储管理的软件算法比较复杂</p>
+</li>
+<li><p>程序代码是按照原样装入内存，在重定位过程中不发生变化</p>
+</li>
+<li><p>相同的逻辑地址，每次执行都要重定位一次</p>
+</li>
+<li><p>改变基地址，很容易实现代码在内存中的移动</p>
+</li>
+<li><p>动态重定位可以将程序分配到不连续的存储区中</p>
+</li>
+<li><p>实现虚拟存储器需要动态重定位技术的支持</p>
+</li>
+</ol>
+<p><strong>二、有一计算机系统，内存容量为512K，辅存容量为2G，逻辑地址形式如下，求其虚拟存储器的实际容量？**</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2020/12/27/27e22ad5f118fcaead717aebdb4f8c6b.png" alt="image-20201227091459284"></p>
+<p>虚拟内存的理论容量：2^10*2^20B=2^30B=1024M</p>
+<p>最大段内地址：2^20B =1M，远大于内存容量</p>
+<p>段长超过 512K的内存容量，所以，最大实际段长为512K</p>
+<p>所以虚拟存储器的实际容量为：2^10*0.5M=0.5G，所以虚拟存储器的实际容量为0.5G</p>
+<p><strong>三、解释静态链接、装入时动态链接和执行时动态链接的不同？</strong></p>
+<p>1、静态链接本来是编译系统的工作，但是随着程序执行方式的改进，“程序链接”不再是编译系统的事情，它还需要</p>
+<p>OS的支持</p>
+<p>程序的静态链接，是指在程序装入内存之前，将已经编译好的多个模块链接成可执行程序，其特点为：1、链接好的可执行程序可反复执行 2、被链接好的模块不能再拆分，不便于修改3、不便于多个程序共享某些模块，需要使用同一模块的多个程序需要将该模块链入自己的程序空间</p>
+<p>装入时动态链接，是指在程序加载进内存的时候，由OS将磁盘中的模块在内存中链接成一个可执行程序，特点是：</p>
+<p>1、可执行程序只在内存中，每次执行需要重新链接</p>
+<p> 2、被链接的各个模块在磁盘上是独立存放的</p>
+<p>3、多个程序共享某一模块时，只需要在内存中保留该模块的一个副本</p>
+<p>执行时动态链接是把程序的链接推迟到程序执行时动态的根据需要进行链接，它除了有装入时动态链接的特点以外，还有一个显著的特点是，只会装入需要的模块，从而减少时空的开销，他增加了链接的复杂性，需要一定的硬件支持。</p>
+<p><strong>四、在分页存储管理系统中，存取一次内存的时间是8us，查询一次快表的时间是1us，缺页中断的时间是20us，假设页表的查询与快表的查询同时进行 。当查询页表时，如果该页在内存但快表中没有页表项，系统将自动把该页页表项送入快表。</strong></p>
+<p><strong>(1) 求对某一数据进行一次次存取可能需要的时间？</strong></p>
+<p>对数据存取有3中情况：</p>
+<ol>
+<li><p>数据在内存中，并且已经存放到块表：</p>
+<p>此时用时：1us+8us=9us</p>
+</li>
+<li><p>数据在内存中，但是其页表项没有存储到快表</p>
+<p>此时的用时为：8us查页表+8us存取内存数据</p>
+</li>
+<li><p>存取的数据不再内存，发生缺页中断</p>
+<p>此时的用时为：查询页表+缺页中断+查询页表+存取内存</p>
+<p>8us+20us+8us+8us=44us</p>
+</li>
+</ol>
+<p><strong>(2) 现连续对同一页面上的数据进行4次连续读取，求每次读取数据可能需要的时间?</strong></p>
+<p>  第一次存取可能需要的时间为：</p>
+<p>1us+8us=9us,8us+8us=16us，8us+20us+8us+8us=44us</p>
+<p>第二次，第三次，第四次对应的页表项已经交换到了快表中，所用的存取时间都是一样的1us+8us=9us</p>
+<p><strong>五、为什么说分段系统相比于分页系统更容易实现信息的共享和保护？如何实现。</strong></p>
+<p>在分页或分段的存储管理中，多个进程并发运行共享同一内存块中的数据是可行的，为了实现共享，在共享者的段表或者页表中，必须有指向共享内存的表目</p>
+<p>在分段系统中，被共享的程序或数据可以作为单独的一段，在物理上它是一段，在不同进程中，可以对应不同的逻辑段，相对来说，实现是比较容易的</p>
+<p>在分页管理中，这要困难的多，首先必须保证被共享的程序或数据占有整数快，以便和非共享数据分开，其次对于共享数据的访问应该是有限制条件的</p>
+<p>因此从共享和保护的实现来看，共享的程序或数据应该作为一个逻辑单位，在分段管理中也就是一段，实现共享和保护就方便的多</p>
+<p>实现方式：分段系统中是通过两个或多个进程的段表中的表目指向相同的物理块，并设置共享计数来实现的。</p>
+<p>每段设置访问方式，就能实现保护。</p>
+<p><strong>六、在虚拟页式的存储管理系统中，为什么要引入缺页中断？缺页中断的实现有那几部构成？各个部分是怎么实现的？</strong></p>
+<ol>
+<li><p>虚拟页式存储管理系统是在页式管理系统上实现的虚拟存储器，作业在执行时，并不是把所有的页都放在主存中的，当要访问的页面不存在时，需要系统通过缺页中段将所需页面由辅存装入主存</p>
+<p>缺页中断由缺页处理和页淘汰完成的</p>
+<p>缺页处理实现：</p>
+<ol>
+<li><p>中断触发</p>
+<p>查询页表时发现逻辑页不在内存中，将其修改位置为0，触发缺页中断</p>
+</li>
+<li><p>页面调入</p>
+<p>OS查找对应页面的辅存地址，将页面调入内存，进行页面淘汰</p>
+</li>
+<li><p>修改页表</p>
+<p>将页面的内存地址填入页表，并将状态位修改为1，缺页中断结束，恢复现场，重新执行指令</p>
+</li>
+</ol>
+<p>页淘汰的实现：</p>
+<ol>
+<li>如果内存有空闲页，直接调入外存的页面，修改页表</li>
+<li>如果内存已满，则根据页面置换算法，淘汰页面</li>
+<li>如果要淘汰的页面的修改位为0，则从外存调入页面覆盖并修改页表</li>
+<li>如果要淘汰的页面修改位为1，则申请一块交换空间，将原页面的内容复制到交换空间中，然后将辅存的页面调入其中，并修改页表</li>
+</ol>
+</li>
+</ol>
+<h2 id="第六章、设备管理"><a href="#第六章、设备管理" class="headerlink" title="第六章、设备管理"></a>第六章、设备管理</h2><p><strong>一、IO软件一般分为四个层次，用户层，设备无关软件层，设备驱动程序，中断处理程序，请说明下面各项工作是在哪一层完成的？</strong></p>
+<p>设备驱动层：</p>
+<p>​    1、将抽象的要求转化为具体的要求，编码转换</p>
+<p>   2、发送IO指令，控制设备启动</p>
+<p>​    3、检查用户是否有权使用设备</p>
+<p>软件层：</p>
+<p>负责解释用户的请求，并将请求转化成具体的输入输出，但不检查权限</p>
+<p>设备无关的软件层：将逻辑设备名转换为具体的物理设备，实现设备的分配与回收，以及缓冲区管理</p>
+<ol>
+<li><p>向设备寄存器写命令</p>
+<p>属于直接操作设备控制器的操作，属于设备驱动层</p>
+</li>
+<li><p>检查用户是否有权使用设备</p>
+<p>设备驱动层</p>
+</li>
+<li><p>将二进制整数转换成ASCII码以便打印</p>
+<p>这属于将抽象的要求转化为具体的要求</p>
+</li>
+</ol>
+<p><strong>二、在缓冲池中有3个队列，分别为空白缓冲队列em，输入缓冲队列in，以及输出缓冲队列out。过程add_buf（type，numb）和take_buf（type，numb）分别用来把缓冲区numb插入type队列和从type队列中取出缓冲区numb。试描述进程从任一缓冲队列得到一个缓冲区的过程get_buf（type,numb）和将一个缓冲区numb放入缓冲队列的过程put_buf（type,numb）？</strong></p>
+<p>设置队列的互斥信号量为S，初值为1，设置资源数目信号量为RS，初值为n</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Semaphore mutex=<span class="number">1</span>;</span><br><span class="line">Semaphore RS=n;</span><br><span class="line"><span class="function">procedure  <span class="title">put_buf</span><span class="params">(type,numb)</span></span></span><br><span class="line"><span class="function">begin</span></span><br><span class="line"><span class="function">	<span class="title">P</span><span class="params">(S)</span></span>;</span><br><span class="line">	add_buf(type,numb);</span><br><span class="line">	V(mutex);</span><br><span class="line">	V(RS);</span><br><span class="line">end;</span><br><span class="line"></span><br><span class="line"><span class="function">procedure <span class="title">get_buf</span><span class="params">(type,numb)</span></span></span><br><span class="line"><span class="function">begin</span></span><br><span class="line"><span class="function">    <span class="title">P</span><span class="params">(RS)</span></span>;</span><br><span class="line">	P(mutex);</span><br><span class="line">    buffer(numb)=get_buff(type,numb);</span><br><span class="line">    V(mutex);</span><br><span class="line">end;</span><br></pre></td></tr></table></figure>
+
+<p><strong>三、描述操作系统使用公用缓冲池时，数据插入缓冲队列的输入过程？</strong></p>
+<p>缓冲池由多个缓冲区构成，每个缓冲区由缓冲池首部和缓冲体构成，系统通过操作缓冲池的首部实现对缓冲区的管理。</p>
+<p>通常缓冲池有3个队列，em为空白缓冲区队列，in为装满输入数据的缓冲区队列，out为装满输出数据的缓冲区队列，</p>
+<p>另参数type表示缓冲队列类型，参数number表示缓冲区号，缓冲池管理中负责数据输入过程可包括：</p>
+<p>1、过程get_buff(type,numb)；以某种规则从type指定的缓冲区队列中摘取一个缓冲区</p>
+<p>2、过程put_buff(type,numb)；将numb缓冲区放入相应的缓冲队列</p>
+<p>使用上述操作：</p>
+<p>输入过程可被描述如下：</p>
+<p>1、进程调用get_buff(type,numb),从em队列中获取一个空白缓冲区，返回的编号为numb，获取的缓冲区命名为hin</p>
+<p>2、将输入的数据装入到hin中，当hin中装满了数据之后，调用put_buff(in,hin)将该缓冲区插入到输入缓冲队列中</p>
+<p><strong>四、试给出两种IO调度算法，并说明为什么IO调度不能使用时间片轮转法？</strong></p>
+<p>1、FCFS 先来先服务算法。当多个进程对同一IO设备进行输入输出请求时，按照到达时间排成队列，将IO设备分配给队列的第一个进程</p>
+<p>2、优先级高者优先算法。多个进程对同一IO设备进行输入输出请求时，按照进程的优先级排成队列，将IO设备分配给优先级最高的设备</p>
+<p>IO设备因其固有属性，只能独占使用，当一个进程使用完的时候其他进程才能使用，在由通道控制的输入输出系统中，通道程序不能被时钟中断所打断，所以IO调度不能使用时间片轮转法。</p>
+<p><strong>五、某操作系统中采用单缓冲传送磁盘数据。设从磁盘将数据传送到缓冲区所用时间为T1，将缓冲区数据传送到用户区所用时间为T2，CPU处理数据所用时间为T3。问系统处理该数据所用总时间为多少？</strong></p>
+<p>第一个数据块从外存输入到缓冲区并将缓冲区的数据输入到用户区时，第二个数据块将数据输入缓冲区就能和</p>
+
+    </div>
+
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="https://ae01.alicdn.com/kf/HTB1AlvVXk9E3KVjSZFr7610UVXaw.png" alt="iBoy wechat" style="width: 150px; max-width: 100%;">
+  <div>欢迎您扫一扫上面的微信公众号，订阅我的博客！</div>
+</div>
+
+      
+        <div class="reward-container">
+  <div></div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="https://ae01.alicdn.com/kf/HTB1eKnGXkWE3KVjSZSy760ocXXah.png" alt="iBoy 支持作者">
+        <p>支持作者</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>iBoy
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.iboy.tech/post/10605.html" title="操作系统重点">https://blog.iboy.tech/post/10605.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/post/5394.html" rel="next" title="大数据">
+                  <i class="fa fa-chevron-left"></i> 大数据
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/post/43889.html" rel="prev" title="Docker搭建 SoftEther VPN">
+                  Docker搭建 SoftEther VPN <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments" id="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80NDI4OS8yMDgyMQ=="></div>
+  </div>
+  
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一章、操作系统概述"><span class="nav-number">1.</span> <span class="nav-text">第一章、操作系统概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二章、进程和线程的管理"><span class="nav-number">2.</span> <span class="nav-text">第二章、进程和线程的管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三章、进程的同步与通信"><span class="nav-number">3.</span> <span class="nav-text">第三章、进程的同步与通信</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四章、调度与死锁"><span class="nav-number">4.</span> <span class="nav-text">第四章、调度与死锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五章、存储器管理"><span class="nav-number">5.</span> <span class="nav-text">第五章、存储器管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第六章、设备管理"><span class="nav-number">6.</span> <span class="nav-text">第六章、设备管理</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="iBoy"
+    src="https://ae01.alicdn.com/kf/HTB1pZi7XlCw3KVjSZFu763AOpXa0.png">
+  <p class="site-author-name" itemprop="name">iBoy</p>
+  <div class="site-description" itemprop="description">知道的越多，不知道的越多...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+      
+<!--音乐播放器-->
+
+           <div >
+              <iframe frameborder="no" style="margin-top:25px;" border="0" marginwidth="0" marginheight="0" width="210" height="110" src="//music.163.com/outchain/player?type=2&id=479850552&auto=0&height=66"></iframe>
+           </div>
+
+
+
+<!--标签云-->
+
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Celery/" rel="tag">Celery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding/" rel="tag">Coding</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask/" rel="tag">Flask</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-SoketIO/" rel="tag">Flask SoketIO</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-Redis/" rel="tag">Flask-Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask-SQLAlchemy/" rel="tag">Flask-SQLAlchemy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Frp/" rel="tag">Frp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/" rel="tag">Git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/" rel="tag">GitHub</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDE/" rel="tag">IDE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Markdown/" rel="tag">Markdown</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Miniconda/" rel="tag">Miniconda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python-Web/" rel="tag">Python Web</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Trojan/" rel="tag">Trojan</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/" rel="tag">Unity</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/" rel="tag">Vim</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VsCode/" rel="tag">VsCode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web/" rel="tag">Web</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebSocket/" rel="tag">WebSocket</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/" rel="tag">npm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipenv/" rel="tag">pipenv</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E5%B0%9A/" rel="tag">云尚</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%8F%E7%A8%8B/" rel="tag">协程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%A8%E7%BA%BF%E5%B7%A5%E5%85%B7/" rel="tag">在线工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8A%93%E5%8C%85/" rel="tag">抓包</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8E%A5%E7%A0%81%E5%B9%B3%E5%8F%B0/" rel="tag">接码平台</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%B6%E8%97%8F/" rel="tag">收藏</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86/" rel="tag">数据库原理</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9A%91%E6%9C%9F%E7%AD%94%E8%BE%A9/" rel="tag">暑期答辩</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/" rel="tag">科学上网</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">iBoy</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">440k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:40</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.1.js"></script>
+
+<script src="/js/motion.js?v=7.4.1.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.1.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.1.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.1.js"></script>
+
+
+  <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three.min.js"></script>
+    <script defer src="/lib/three/three-waves.min.js"></script>
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+<script src="/js/local-search.js?v=7.4.1.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+</body>
+</html>
