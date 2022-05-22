@@ -982,7 +982,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.iboy.tech/post/49223.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.iboy.tech/post/43889.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://ae01.alicdn.com/kf/HTB1pZi7XlCw3KVjSZFu763AOpXa0.png">
@@ -996,7 +996,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/post/49223.html" class="post-title-link" itemprop="url">OBCA</a>
+            <a href="/post/43889.html" class="post-title-link" itemprop="url">Docker搭建 SoftEther VPN</a>
         </h2>
 
         <div class="post-meta">
@@ -1006,7 +1006,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-01-12 23:38:06" itemprop="dateCreated datePublished" datetime="2021-01-12T23:38:06+08:00">2021-01-12</time>
+              <time title="创建时间：2021-01-01 22:06:32" itemprop="dateCreated datePublished" datetime="2021-01-01T22:06:32+08:00">2021-01-01</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -1022,7 +1022,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
+              <span>391</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1041,7 +1041,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><img src="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/12/04b069233878993f861cc86ab7bba51b.png" alt="image-20210112234010594"></p><p><img src="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/12/14bfc04ed14bb85d6fccc06ea1866678.png" alt="image-20210112234205609"></p><p><img src="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/12/d2b2adbd4634680c1f599cdc96772cb4.png" alt="image-20210112234420913"></p><p><img src="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/12/6b49bd57821b834ad08111c6de2df47f.png" alt="image-20210112234730247"></p><p><img src="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/12/7df6b28d51b8809cc5a486b7449f1d7d.png" alt="image-20210112235037938"></p><p><img src="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/12/e04f6f7f8d7a61961fecba59a26feb2d.png" alt="image-20210112235213425"></p><p><img src="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/12/d58dcbf45c3ad14d90cbca56fce4b9f1.png" alt="image-20210112235629182"></p><p><img src="https://cdn.jsdelivr.net/gh/iboy-tech/static/images/2021/01/12/987729c6412f22cf3f8048082cf8b6ec.png" alt="image-20210112235956035"></p>
+          <p>1、运行Docker镜像</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">	--name=softethervpn \</span><br><span class="line">       	--restart=always --cap-add NET_ADMIN \</span><br><span class="line">	-p 500:500/udp \</span><br><span class="line">       	-p 4500:4500/udp \</span><br><span class="line">	-p 1701:1701/tcp \</span><br><span class="line">	-p 1194:1194/udp \</span><br><span class="line">	-p 5555:5555/tcp \</span><br><span class="line">       	-e SPW=超级管理员密码 \</span><br><span class="line">	-e HPW=普通管理员密码 \</span><br><span class="line">       	-e PSK=vpn \</span><br><span class="line">	-e USERNAME=用户名 \</span><br><span class="line">	-v /dev/null:/usr/vpnserver/server_log \</span><br><span class="line">	-v /dev/null:/usr/vpnserver/packet_log \</span><br><span class="line">        -v /dev/null:/usr/vpnserver/security_log\</span><br><span class="line">        -e PASSWORD=密码 \</span><br><span class="line">	siomiz/softethervpn:alpine</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -1108,7 +1108,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">90</span>
+          <span class="site-state-item-count">89</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
