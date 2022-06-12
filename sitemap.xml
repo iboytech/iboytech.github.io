@@ -173,15 +173,6 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/categories/index.html</loc>
-    
-    <lastmod>2022-05-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.iboy.tech/schedule/index.html</loc>
     
     <lastmod>2022-05-20</lastmod>
@@ -191,7 +182,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/14725.html</loc>
+    <loc>https://blog.iboy.tech/categories/index.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -201,6 +192,24 @@
   
   <url>
     <loc>https://blog.iboy.tech/post/54196.html</loc>
+    
+    <lastmod>2022-05-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/post/49280.html</loc>
+    
+    <lastmod>2022-05-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/post/14725.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -227,7 +236,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/49280.html</loc>
+    <loc>https://blog.iboy.tech/post/43345.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -245,7 +254,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/43345.html</loc>
+    <loc>https://blog.iboy.tech/post/43793.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -254,7 +263,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/43793.html</loc>
+    <loc>https://blog.iboy.tech/post/3462.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -281,15 +290,6 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/39661.html</loc>
-    
-    <lastmod>2022-05-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.iboy.tech/post/undefined.html</loc>
     
     <lastmod>2022-05-20</lastmod>
@@ -299,16 +299,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/3462.html</loc>
-    
-    <lastmod>2022-05-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.iboy.tech/post/53348.html</loc>
+    <loc>https://blog.iboy.tech/post/39661.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -326,25 +317,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/undefined.html</loc>
-    
-    <lastmod>2022-05-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.iboy.tech/post/61034.html</loc>
-    
-    <lastmod>2022-05-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.iboy.tech/post/58909.html</loc>
+    <loc>https://blog.iboy.tech/post/53348.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -362,7 +335,16 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/54234.html</loc>
+    <loc>https://blog.iboy.tech/post/undefined.html</loc>
+    
+    <lastmod>2022-05-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/post/58909.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -380,7 +362,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/20075.html</loc>
+    <loc>https://blog.iboy.tech/post/61034.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -389,7 +371,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/58768.html</loc>
+    <loc>https://blog.iboy.tech/post/54234.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -416,7 +398,16 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/22648.html</loc>
+    <loc>https://blog.iboy.tech/post/58768.html</loc>
+    
+    <lastmod>2022-05-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/post/20075.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -434,7 +425,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/14399.html</loc>
+    <loc>https://blog.iboy.tech/post/51005.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -443,7 +434,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/51005.html</loc>
+    <loc>https://blog.iboy.tech/post/22648.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -470,6 +461,15 @@
   </url>
   
   <url>
+    <loc>https://blog.iboy.tech/post/14399.html</loc>
+    
+    <lastmod>2022-05-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.iboy.tech/post/1507.html</loc>
     
     <lastmod>2022-05-20</lastmod>
@@ -480,15 +480,6 @@
   
   <url>
     <loc>https://blog.iboy.tech/post/38590.html</loc>
-    
-    <lastmod>2022-05-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.iboy.tech/post/32112.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -515,7 +506,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/2783.html</loc>
+    <loc>https://blog.iboy.tech/post/32112.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -524,7 +515,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/50306.html</loc>
+    <loc>https://blog.iboy.tech/post/2783.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -542,7 +533,25 @@
   </url>
   
   <url>
+    <loc>https://blog.iboy.tech/post/3217.html</loc>
+    
+    <lastmod>2022-05-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.iboy.tech/post/30764.html</loc>
+    
+    <lastmod>2022-05-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/post/50306.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -560,15 +569,6 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/3217.html</loc>
-    
-    <lastmod>2022-05-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.iboy.tech/post/4849.html</loc>
     
     <lastmod>2022-05-20</lastmod>
@@ -578,7 +578,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/53944.html</loc>
+    <loc>https://blog.iboy.tech/post/26946.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -596,7 +596,16 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/26946.html</loc>
+    <loc>https://blog.iboy.tech/post/53944.html</loc>
+    
+    <lastmod>2022-05-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/post/575.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -623,16 +632,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/575.html</loc>
-    
-    <lastmod>2022-05-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.iboy.tech/post/11382.html</loc>
+    <loc>https://blog.iboy.tech/post/29173.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -642,15 +642,6 @@
   
   <url>
     <loc>https://blog.iboy.tech/post/42790.html</loc>
-    
-    <lastmod>2022-05-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.iboy.tech/post/29173.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -677,6 +668,15 @@
   </url>
   
   <url>
+    <loc>https://blog.iboy.tech/post/30839.html</loc>
+    
+    <lastmod>2022-05-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.iboy.tech/post/43648.html</loc>
     
     <lastmod>2022-05-20</lastmod>
@@ -686,7 +686,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/30839.html</loc>
+    <loc>https://blog.iboy.tech/post/11382.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -722,7 +722,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/822.html</loc>
+    <loc>https://blog.iboy.tech/post/21407.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -731,7 +731,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/21407.html</loc>
+    <loc>https://blog.iboy.tech/post/822.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -749,7 +749,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/44464.html</loc>
+    <loc>https://blog.iboy.tech/post/11667.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -776,15 +776,6 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/post/11667.html</loc>
-    
-    <lastmod>2022-05-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.iboy.tech/post/24743.html</loc>
     
     <lastmod>2022-05-20</lastmod>
@@ -795,6 +786,15 @@
   
   <url>
     <loc>https://blog.iboy.tech/post/31230.html</loc>
+    
+    <lastmod>2022-05-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/post/44464.html</loc>
     
     <lastmod>2022-05-20</lastmod>
     
@@ -839,21 +839,7 @@
 
   
   <url>
-    <loc>https://blog.iboy.tech/tags/Docker/</loc>
-    <lastmod>2022-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.iboy.tech/tags/%E6%9A%91%E6%9C%9F%E7%AD%94%E8%BE%A9/</loc>
-    <lastmod>2022-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.iboy.tech/tags/Celery/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -868,6 +854,20 @@
   
   <url>
     <loc>https://blog.iboy.tech/tags/%E9%80%86%E5%90%91/</loc>
+    <lastmod>2022-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/tags/Celery/</loc>
+    <lastmod>2022-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/tags/Docker/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -944,14 +944,14 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/tags/Kali/</loc>
+    <loc>https://blog.iboy.tech/tags/Python/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/tags/Python/</loc>
+    <loc>https://blog.iboy.tech/tags/Kali/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -972,14 +972,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/tags/Markdown/</loc>
-    <lastmod>2022-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.iboy.tech/tags/Miniconda/</loc>
+    <loc>https://blog.iboy.tech/tags/MongoDB/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -993,7 +986,14 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/tags/MongoDB/</loc>
+    <loc>https://blog.iboy.tech/tags/Markdown/</loc>
+    <lastmod>2022-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/tags/Miniconda/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1028,21 +1028,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/tags/Unity/</loc>
-    <lastmod>2022-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.iboy.tech/tags/Supervisor/</loc>
-    <lastmod>2022-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.iboy.tech/tags/frp/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1063,28 +1049,14 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/tags/Vim/</loc>
+    <loc>https://blog.iboy.tech/tags/Unity/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/tags/pipenv/</loc>
-    <lastmod>2022-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.iboy.tech/tags/Git/</loc>
-    <lastmod>2022-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.iboy.tech/tags/GitHub/</loc>
+    <loc>https://blog.iboy.tech/tags/frp/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1105,14 +1077,28 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/tags/Coding/</loc>
+    <loc>https://blog.iboy.tech/tags/Git/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/tags/Ubuntu/</loc>
+    <loc>https://blog.iboy.tech/tags/GitHub/</loc>
+    <lastmod>2022-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/tags/pipenv/</loc>
+    <lastmod>2022-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/tags/Vim/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1126,7 +1112,14 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/tags/%E5%85%AC%E4%BC%97%E5%8F%B7/</loc>
+    <loc>https://blog.iboy.tech/tags/Ubuntu/</loc>
+    <lastmod>2022-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/tags/Coding/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1147,7 +1140,21 @@
   </url>
   
   <url>
+    <loc>https://blog.iboy.tech/tags/%E5%85%AC%E4%BC%97%E5%8F%B7/</loc>
+    <lastmod>2022-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.iboy.tech/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2022-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/tags/%E5%8D%8F%E7%A8%8B/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1167,24 +1174,17 @@
     <priority>0.2</priority>
   </url>
   
-  <url>
-    <loc>https://blog.iboy.tech/tags/%E5%8D%8F%E7%A8%8B/</loc>
-    <lastmod>2022-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
 
   
   <url>
-    <loc>https://blog.iboy.tech/categories/Flask/</loc>
+    <loc>https://blog.iboy.tech/categories/Android/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/categories/Android/</loc>
+    <loc>https://blog.iboy.tech/categories/Flask/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1198,21 +1198,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/categories/Flask/Python/</loc>
-    <lastmod>2022-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.iboy.tech/categories/Web/</loc>
-    <lastmod>2022-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.iboy.tech/categories/Flask/Web/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1226,7 +1212,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/categories/Hexo/</loc>
+    <loc>https://blog.iboy.tech/categories/Flask/Python/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1240,7 +1226,21 @@
   </url>
   
   <url>
+    <loc>https://blog.iboy.tech/categories/Hexo/</loc>
+    <lastmod>2022-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.iboy.tech/categories/Hexo/%E7%BE%8E%E5%8C%96/</loc>
+    <lastmod>2022-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/categories/Flask/Web/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1254,13 +1254,6 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/categories/Hexo/Markdown/</loc>
-    <lastmod>2022-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.iboy.tech/categories/Flask/MongoDB/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
@@ -1268,7 +1261,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/categories/Redis/</loc>
+    <loc>https://blog.iboy.tech/categories/Hexo/Markdown/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1282,7 +1275,7 @@
   </url>
   
   <url>
-    <loc>https://blog.iboy.tech/categories/Redis/Flask/</loc>
+    <loc>https://blog.iboy.tech/categories/Redis/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1290,6 +1283,13 @@
   
   <url>
     <loc>https://blog.iboy.tech/categories/Python/MongoDB/</loc>
+    <lastmod>2022-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.iboy.tech/categories/Redis/Flask/</loc>
     <lastmod>2022-06-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
