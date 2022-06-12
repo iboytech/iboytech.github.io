@@ -62,8 +62,8 @@
 <meta property="og:description" content="NoSQL概述1、什么是 NoSQLNoSQL泛指非关系型的数据库Not Only SQL。2、NoSQL 数据库的四大分类">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://blog.iboy.tech/static/img/%E6%9A%91%E6%9C%9F%E5%9F%B9%E8%AE%AD-Redis/image-20200726194039683.png">
-<meta property="article:published_time" content="2022-05-20T09:05:57.928Z">
-<meta property="article:modified_time" content="2022-05-20T09:05:57.929Z">
+<meta property="article:published_time" content="2022-06-12T06:52:37.904Z">
+<meta property="article:modified_time" content="2022-06-12T06:52:37.904Z">
 <meta property="article:author" content="iBoy">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://blog.iboy.tech/static/img/%E6%9A%91%E6%9C%9F%E5%9F%B9%E8%AE%AD-Redis/image-20200726194039683.png">
@@ -254,7 +254,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2022-05-20 17:05:57" itemprop="dateCreated datePublished" datetime="2022-05-20T17:05:57+08:00">2022-05-20</time>
+              <time title="创建时间：2022-06-12 14:52:37" itemprop="dateCreated datePublished" datetime="2022-06-12T14:52:37+08:00">2022-06-12</time>
             </span>
 
           
@@ -488,7 +488,7 @@
 <h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><h2 id="Redis操作复杂数据类型"><a href="#Redis操作复杂数据类型" class="headerlink" title="Redis操作复杂数据类型"></a>Redis操作复杂数据类型</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ctgu.demo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.DisplayName;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.test.context.SpringBootTest;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DemoApplicationTests</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    RedisTemplate redisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">contextLoads</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="meta">@DisplayName</span>(<span class="string">"RediscaozSet"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">testSet</span><span class="params">()</span></span>&#123;</span><br><span class="line">        SetOperations operations=redisTemplate.opsForSet();</span><br><span class="line">        operations.add(<span class="string">"s1"</span>, <span class="string">"v1"</span>);</span><br><span class="line">        operations.add(<span class="string">"s1"</span>,<span class="string">"v2"</span>);</span><br><span class="line">        Cursor&lt;String&gt;cursor=operations.scan(<span class="string">"s1"</span>, ScanOptions.NONE);</span><br><span class="line">        <span class="keyword">while</span> (cursor.hasNext())&#123;</span><br><span class="line">            System.out.println(cursor.next());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="meta">@DisplayName</span>(<span class="string">"测试Hash"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">testHash</span><span class="params">()</span></span>&#123;</span><br><span class="line">        HashOperations&lt;String,String,String&gt; operations=redisTemplate.opsForHash();</span><br><span class="line">        HashMap map=<span class="keyword">new</span> HashMap();</span><br><span class="line">        map.put(<span class="string">"t1"</span>,<span class="string">"tv1"</span>);</span><br><span class="line">        operations.putAll(<span class="string">"h1"</span>,map);</span><br><span class="line">        operations.put(<span class="string">"h1"</span>,<span class="string">"k1"</span>,<span class="string">"v1"</span>);</span><br><span class="line">        operations.put(<span class="string">"h1"</span>,<span class="string">"k2"</span>,<span class="string">"v2"</span>);</span><br><span class="line">        operations.put(<span class="string">"h1"</span>,<span class="string">"k3"</span>,<span class="string">"m2"</span>);</span><br><span class="line">        Cursor&lt;Map.Entry&lt;String, String&gt;&gt; cursor=operations.scan(<span class="string">"h1"</span>, <span class="keyword">new</span> ScanOptions.ScanOptionsBuilder().match(<span class="string">"*k*"</span>).build());</span><br><span class="line">        <span class="keyword">while</span> (cursor.hasNext())&#123;</span><br><span class="line">            Map.Entry&lt;String,String&gt; entry = cursor.next();</span><br><span class="line">            System.out.println(entry.getKey());;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">//        System.out.println(redisTemplate.opsForHash().entries("h1"));</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="项目代码："><a href="#项目代码：" class="headerlink" title="项目代码："></a>项目代码：</h1><blockquote>
-<p>GitHub：<a href="https://github.com/iboy-tech/2020-7-29-redis" target="_blank" rel="noopener">https://github.com/iboy-tech/2020-7-29-redis</a></p>
+<p>GitHub：<a href="https://github.com/iboytech/2020-7-29-redis" target="_blank" rel="noopener">https://github.com/iboytech/2020-7-29-redis</a></p>
 </blockquote>
 <h1 id="关于Redis的参考"><a href="#关于Redis的参考" class="headerlink" title="关于Redis的参考"></a>关于Redis的参考</h1><blockquote>
 <p>👉 Redis命令手册   <a href="https://www.redis.net.cn/order/" target="_blank" rel="noopener">https://www.redis.net.cn/order/</a></p>
@@ -547,17 +547,14 @@
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/post/61036.html" rel="next" title="Docker搭建Hadoop集群">
-                  <i class="fa fa-chevron-left"></i> Docker搭建Hadoop集群
+                <a href="/post/47784.html" rel="next" title="Kali使用">
+                  <i class="fa fa-chevron-left"></i> Kali使用
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/post/49742.html" rel="prev" title="Mac安装和破解激活Charles">
-                  Mac安装和破解激活Charles <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
       </footer>
