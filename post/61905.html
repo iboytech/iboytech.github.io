@@ -62,7 +62,7 @@
 <meta property="og:description" content="1、安装1234567891011[root@VM-12-16-centos backup]# rclone --versionrclone v1.62.2- os&#x2F;version: centos 7.6.1810 (64 bit)- os&#x2F;kernel: 3.10.0-1160.71.1.el7.x86_64 (x86_64)- os&#x2F;type: linux- os&#x2F;arch: amd64- g">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-16T09:36:35.000Z">
-<meta property="article:modified_time" content="2023-04-16T09:48:02.656Z">
+<meta property="article:modified_time" content="2023-04-16T14:34:02.961Z">
 <meta property="article:author" content="iBoy">
 <meta property="article:tag" content="Rclone">
 <meta name="twitter:card" content="summary">
@@ -254,7 +254,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-04-16 17:36:35 / 修改时间：17:48:02" itemprop="dateCreated datePublished" datetime="2023-04-16T17:36:35+08:00">2023-04-16</time>
+              <time title="创建时间：2023-04-16 17:36:35 / 修改时间：22:34:02" itemprop="dateCreated datePublished" datetime="2023-04-16T17:36:35+08:00">2023-04-16</time>
             </span>
 
           
@@ -270,7 +270,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>771</span>
+              <span>936</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -297,6 +297,12 @@
 
 <p>3、挂载本地并配置开机自启</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/systemd/system/rclone.service</span><br><span class="line"></span><br><span class="line">[Unit]</span><br><span class="line">Description=Rclone</span><br><span class="line">After=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">User=root</span><br><span class="line">ExecStart=/usr/bin/rclone mount webdav:/backup /backup --cache-dir /tmp --allow-other --allow-non-empty --vfs-cache-mode writes --no-check-certificate</span><br><span class="line">Restart=on-abort</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">systemctl enable rclone</span><br><span class="line"></span><br><span class="line">systemctl status rclone</span><br></pre></td></tr></table></figure>
+
+<p>4、同步目录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rclone -P --ignore-existing -u -v -P --transfers=10 --ignore-errors --buffer-size=200M --check-first --checkers=10 sync ./backup/ webdav:/backup</span><br></pre></td></tr></table></figure>
+
+<p>5、解除挂载</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fusermount -zu /backup</span><br></pre></td></tr></table></figure>
 
 
     </div>
